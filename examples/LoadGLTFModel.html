@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Render cube</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            color: #fff;
+            display: flex;
+            text-align: center;
+            flex-direction: column;
+            justify-content: center;
+        }
+        p{
+            font-size: 14px;
+            margin:0
+        }
+        canvas {
+            width: 100%;
+            height: 100%; 
+        }
+    </style>
+</head>
+<body>
+    <canvas></canvas>
+    <script type="module">
+      import * as WebGPULibrary from "../src/index.js";
+      const canvas = document.querySelector("canvas");
+
+      const camera = new WebGPULibrary.PerspectiveCamera({
+        position: new WebGPULibrary.Vector3(1, 0, 5),
+        fov: 60
+      });
+
+      const renderer = new WebGPULibrary.Renderer({ canvas, camera });
+      const controls = new WebGPULibrary.OrbitControl(camera, canvas);
+
+      renderer.onUpdate(() => {
+        controls.update();
+      });
+
+      (async () => {
+        const texture = await new WebGPULibrary.TextureLoader().loadCubemapAsync([
+          '/assets/cubemap/px.jpg',
+          '/assets/cubemap/nx.jpg',
+          '/assets/cubemap/py.jpg',
+          '/assets/cubemap/ny.jpg',
+          '/assets/cubemap/pz.jpg',
+          '/assets/cubemap/nz.jpg'
+        ]);
+        const skybox = new WebGPULibrary.Skybox(texture);
+        const helmet = await new WebGPULibrary.GLTFLoader().loadAsync('/assets/models/helmet.glb');
+        // renderer.scene.add(helmet);
+
+        const snowGlobe = await new WebGPULibrary.GLTFLoader().loadAsync('/assets/models/snowGlobe.glb');
+        snowGlobe.scale.set(0.01, 0.01, 0.01);
+        renderer.scene.add(snowGlobe);
+        renderer.start();
+      })();
+    </script>
+</body>
+</html>

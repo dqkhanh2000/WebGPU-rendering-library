@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Render cube</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            color: #fff;
+            display: flex;
+            text-align: center;
+            flex-direction: column;
+            justify-content: center;
+        }
+        p{
+            font-size: 14px;
+            margin:0
+        }
+        canvas {
+            width: 100%;
+            height: 100%; 
+        }
+    </style>
+</head>
+<body>
+    <canvas></canvas>
+    <script type="module">
+      import * as WebGPULibrary from "../src/index.js";
+
+      const canvas = document.querySelector("canvas");
+
+      const camera = new WebGPULibrary.PerspectiveCamera({
+        position: new WebGPULibrary.Vector3(0, 2, 5),
+        lookAt: new WebGPULibrary.Vector3(0, 0, 0),
+        fov: 60
+      });
+      const renderer = new WebGPULibrary.Renderer({ canvas, camera });
+
+      const cube1 = new WebGPULibrary.Mesh({
+          geometry: new WebGPULibrary.CubeGeometry(),
+          material: new WebGPULibrary.NormalMaterial()
+        });
+      cube1.position.set(-1, 0, 0);
+      renderer.scene.add(cube1);
+
+      const cube2 = new WebGPULibrary.Mesh({
+          geometry: new WebGPULibrary.CubeGeometry(),
+          material: new WebGPULibrary.NormalMaterial()
+        });
+      cube2.position.set(1, 0, 0);
+      renderer.scene.add(cube2);
+
+      renderer.onUpdate(() => {
+        cube1.rotation.y = Date.now() / 1000;
+        cube2.rotation.y = Date.now() / 1000;
+      });
+
+      renderer.start();
+    </script>
+</body>
+</html>
