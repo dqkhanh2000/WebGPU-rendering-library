@@ -96,6 +96,13 @@ class Vector {
     return this;
   }
 
+  normalize() {
+    const len = this.len();
+    this._array.forEach((v, i) => this._array[i] = v / len);
+    this._trigger();
+    return this;
+  }
+
   clone() {
     return new Vector(this.toArray());
   }

@@ -14,6 +14,7 @@ export { Mesh } from "./objects/Mesh.js";
 export { Skybox } from "./objects/Skybox.js";
 export { BufferGeometry } from "./geometry/BufferGeometry.js";
 export { CubeGeometry } from "./geometry/CubeGeometry.js";
+export { SphereGeometry } from "./geometry/SphereGeometry.js";
 export { ShaderMaterial } from "./material/ShaderMaterial.js";
 export { NormalMaterial } from "./material/NormalMaterial.js";
 export { PhysicalMaterial } from "./material/PhysicalMaterial.js";
