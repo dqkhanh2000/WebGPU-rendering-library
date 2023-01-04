@@ -55,9 +55,20 @@
       cube2.position.set(1, 0, 0);
       renderer.scene.add(cube2);
 
+      const sphere = new WebGPULibrary.Mesh({
+          geometry: new WebGPULibrary.SphereGeometry(),
+          material: new WebGPULibrary.NormalMaterial()
+        });
+
+      sphere.position.set(0, 1, 0);
+      sphere.scale.set(0.5, 0.5, 0.5)
+      renderer.scene.add(sphere);
+
       renderer.onUpdate(() => {
-        cube1.rotation.y = Date.now() / 1000;
-        cube2.rotation.y = Date.now() / 1000;
+        cube1.rotation.set(Date.now() / 1000, Date.now() / 1000, 0);
+        cube2.rotation.set(Date.now() / 1000, 1 - Date.now() / 1000, 0);
+        sphere.rotation.set(Date.now() / 1000, Date.now() / 1000, 0);
+
       });
 
       renderer.start();
