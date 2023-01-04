@@ -56,11 +56,7 @@
         ]);
         const skybox = new WebGPULibrary.Skybox(texture);
         const helmet = await new WebGPULibrary.GLTFLoader().loadAsync('/assets/models/helmet.glb');
-        // renderer.scene.add(helmet);
-
-        const snowGlobe = await new WebGPULibrary.GLTFLoader().loadAsync('/assets/models/snowGlobe.glb');
-        snowGlobe.scale.set(0.01, 0.01, 0.01);
-        renderer.scene.add(snowGlobe);
+        renderer.scene.add(helmet);
         renderer.start();
       })();
     </script>
