@@ -9,6 +9,8 @@ class ShaderMaterial {
 
   topology = "triangle-list";
 
+  blendMode = "OPAQUE";
+
   _vertexShaderModule;
 
   _fragmentShaderModule;
@@ -23,6 +25,7 @@ class ShaderMaterial {
     this.name = props.name ?? "ShaderMaterial";
     this.vertexShader = props.vertexShader;
     this.fragmentShader = props.fragmentShader;
+    this.blendMode = props.blendMode ?? "OPAQUE";
   }
 
   destroy() {
@@ -60,6 +63,92 @@ class ShaderMaterial {
   // eslint-disable-next-line no-unused-vars
   getBindGroup(device, layout, ...props) {
     return device.createBindGroup({ layout, entries: [] });
+  }
+
+  getBlend() {
+    if (this.blendMode === "OPAQUE") {
+      return {
+        color: {
+          srcFactor : "src-alpha",
+          dstFactor : "one-minus-src-alpha",
+          operation : "add",
+        },
+        alpha: {
+          srcFactor : "src-alpha",
+          dstFactor : "one",
+          operation : "add",
+        },
+      };
+    }
+    if (this.blendMode === "ADD") {
+      return {
+        color: {
+          srcFactor : "src-alpha",
+          dstFactor : "one",
+          operation : "add",
+        },
+        alpha: {
+          srcFactor : "src-alpha",
+          dstFactor : "one",
+          operation : "add",
+        },
+      };
+    }
+    if (this.blendMode === "MULTIPLY") {
+      return {
+        color: {
+          srcFactor : "dst-color",
+          dstFactor : "zero",
+          operation : "add",
+        },
+        alpha: {
+          srcFactor : "dst-color",
+          dstFactor : "zero",
+          operation : "add",
+        },
+      };
+    }
+    if (this.blendMode === "ALPHA" || this.blendMode === "BLEND") {
+      return {
+        color: {
+          srcFactor : "src-alpha",
+          dstFactor : "one-minus-src-alpha",
+        },
+        alpha: {
+          srcFactor : "zero",
+          dstFactor : "one",
+        },
+      };
+    }
+    if (this.blendMode === "PREMULTIPLIED") {
+      return {
+        color: {
+          srcFactor : "one",
+          dstFactor : "one-minus-src-alpha",
+          operation : "add",
+        },
+        alpha: {
+          srcFactor : "one",
+          dstFactor : "one-minus-src-alpha",
+          operation : "add",
+        },
+      };
+    }
+    if (this.blendMode === "SCREEN") {
+      return {
+        color: {
+          srcFactor : "one",
+          dstFactor : "one-minus-src-color",
+          operation : "add",
+        },
+        alpha: {
+          srcFactor : "one",
+          dstFactor : "one-minus-src-color",
+          operation : "add",
+        },
+      };
+    }
+
   }
 }
 

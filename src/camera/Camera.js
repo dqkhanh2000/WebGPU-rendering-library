@@ -4,17 +4,49 @@ import { UniformBuffer } from "../buffer/UniformBuffer.js";
 import { Matrix4 } from "../math/Matrix4.js";
 import { Vector3 } from "../math/Vector3.js";
 
+/**
+ * The base camera class.
+ */
 class Camera {
+
+  /**
+   * The camera position.
+   * @type {Vector3}
+   */
   position;
 
+  /**
+   * The camera look at position.
+   * @type {Vector3}
+   * @default Vector3.ZERO
+   */
   lookAt;
 
+  /**
+   * The camera up vector.
+   * @type {Vector3}
+   * @default Vector3.UP
+   */
   up;
 
+  /**
+   * The camera view matrix.
+   * @type {Matrix4}
+   * @default Matrix4.IDENTITY
+   */
   viewMatrix;
 
+  /**
+   * The camera projection matrix.
+   * @type {Matrix4}
+   * @default Matrix4.IDENTITY
+   */
   projectionMatrix;
 
+  /**
+   * The camera uniform buffer.
+   * @type {UniformBuffer}
+   */
   uniform;
 
   static UniformKeys = {
