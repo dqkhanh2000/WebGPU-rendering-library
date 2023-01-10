@@ -155,7 +155,8 @@ class Renderer {
         vertexShaderModule   : material.getVertexShaderModule(device),
         fragmentShaderModule : material.getFragmentShaderModule(device),
         presentationFormat   : presentationFormat,
-        premitive            : {
+        blend                : material.getBlend(),
+        primitive            : {
           cullMode : material.cullMode,
           topology : material.topology,
         },

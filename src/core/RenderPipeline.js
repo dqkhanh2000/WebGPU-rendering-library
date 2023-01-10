@@ -1,6 +1,8 @@
 class RenderPipeline {
   gpu;
 
+  _blend;
+
   _vertexShaderModule;
 
   _fragmentShaderModule;
@@ -40,6 +42,7 @@ class RenderPipeline {
       depthCompare      : "less",
       format            : "depth24plus",
     };
+    this._blend = props.blend;
     if (this._bindGroupLayoutEntries) {
       this._pipelineLayout = device.createPipelineLayout({
         bindGroupLayouts: this._bindGroupLayoutEntries.map((entries) => device.createBindGroupLayout({ entries })),
@@ -55,9 +58,15 @@ class RenderPipeline {
         module     : this._fragmentShaderModule,
         entryPoint : "main",
         targets    : [
-          { format: this._presentationFormat },
+          {
+            format: this._presentationFormat,
+          },
         ],
       };
+      if (this._blend) {
+        this._fragmentState.targets[0].blend = this._blend;
+      }
+
     }
     this._pipeline = device.createRenderPipeline({
       layout       : this._pipelineLayout,

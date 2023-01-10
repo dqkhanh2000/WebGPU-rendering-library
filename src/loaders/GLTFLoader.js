@@ -112,6 +112,7 @@ class GLTFLoader extends BaseLoader {
     let metallicRoughnessTexture = DefaultTexture;
     let emissiveTexture = DefaultTexture;
     let aoTexture = DefaultTexture;
+    let blendMode = _mat.getAlphaMode();
     const updateTextureInfo = (texture, info) => {
       texture?.updateDescriptor({
         sampler: {
@@ -146,6 +147,7 @@ class GLTFLoader extends BaseLoader {
       metallicRoughnessTexture,
       emissiveTexture,
       aoTexture,
+      blendMode,
     });
   }
 }
