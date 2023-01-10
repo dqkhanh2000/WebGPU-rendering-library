@@ -1,6 +1,8 @@
-import { Matrix4 } from "../math/Matrix.js";
-import { Vector3 } from "../math/Vector.js";
+
+
 import { UniformBuffer } from "../buffer/UniformBuffer.js";
+import { Matrix4 } from "../math/Matrix4.js";
+import { Vector3 } from "../math/Vector3.js";
 
 class Camera {
   position;
@@ -29,7 +31,7 @@ class Camera {
   constructor(props) {
     this.position = props.position ?? new Vector3(3, 3, 3);
     this.lookAt = props.lookAt ?? new Vector3(0, 0, 0);
-    this.up = props.up ?? Vector3.up();
+    this.up = props.up ?? Vector3.UP;
     this.viewMatrix = new Matrix4();
     this.projectionMatrix = new Matrix4();
     this.needsUpdateViewMatrix = true;
@@ -38,10 +40,10 @@ class Camera {
       binding : 0,
       name    : "CameraUniform",
       items   : [
-        { name: Camera.UniformKeys.VIEW_MATRIX, size: 4 * 16 },
-        { name: Camera.UniformKeys.PROJECTION_MATRIX, size: 4 * 16 },
-        { name: Camera.UniformKeys.CAMERA_POS, size: 4 * 4 },
-        { name: Camera.UniformKeys.VIEW_PROJECTION_INVERSE, size: 4 * 16 },
+        { name: Camera.UniformKeys.VIEW_MATRIX, size: Float32Array.BYTES_PER_ELEMENT * 16 },
+        { name: Camera.UniformKeys.PROJECTION_MATRIX, size: Float32Array.BYTES_PER_ELEMENT * 16 },
+        { name: Camera.UniformKeys.CAMERA_POS, size: Float32Array.BYTES_PER_ELEMENT * 4 },
+        { name: Camera.UniformKeys.VIEW_PROJECTION_INVERSE, size: Float32Array.BYTES_PER_ELEMENT * 16 },
       ],
     });
   }

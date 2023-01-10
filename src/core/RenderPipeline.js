@@ -15,7 +15,7 @@ class RenderPipeline {
 
   _vertexBufferLayouts;
 
-  _premitive;
+  _primitive;
 
   _depthStencil;
 
@@ -31,7 +31,7 @@ class RenderPipeline {
     this._vertexShaderModule = props.vertexShaderModule;
     this._fragmentShaderModule = props.fragmentShaderModule;
     this._presentationFormat = props.presentationFormat ?? preferredFormat;
-    this._premitive = props.premitive ?? {
+    this._primitive = props.primitive ?? {
       topology : "triangle-list",
       cullMode : "back",
     };
@@ -63,7 +63,7 @@ class RenderPipeline {
       layout       : this._pipelineLayout,
       vertex       : this._vertexState,
       fragment     : this._fragmentState,
-      primitive    : this._premitive,
+      primitive    : this._primitive,
       depthStencil : this._depthStencil,
     });
   }

@@ -1,4 +1,5 @@
-import { Vector3 } from "../math/Vector";
+
+import { Vector3 } from "../math/Vector3";
 import { BufferGeometry } from "./BufferGeometry";
 
 class SphereGeometry extends BufferGeometry {

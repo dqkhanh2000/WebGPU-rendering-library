@@ -1,11 +1,12 @@
-import { Matrix4, Matrix3 } from "../math/Matrix.js";
-import { Vector3 } from "../math/Vector.js";
+import { Matrix3 } from "../math/Matrix3.js";
+import { Matrix4 } from "../math/Matrix4.js";
+import { Vector3 } from "../math/Vector3";
 import { UniformBuffer } from "../buffer/UniformBuffer.js";
 import { TextureObject } from "../buffer/TextureObject.js";
 import { Mesh } from "./Mesh.js";
-import $$ from "../utils/constants.js";
+import { GPUTextureUsage } from "../utils/WebGPUTypes.js";
+import { BuiltinsMatrix, BuiltinsUniform } from "../utils/constants.js";
 
-const GPUTextureUsage = window.GPUTextureUsage ?? {};
 class SceneNode {
   name;
 
@@ -44,9 +45,9 @@ class SceneNode {
   constructor(name) {
     this.name = name ?? "";
     this.children = [];
-    this.position = Vector3.zero();
-    this.rotation = Vector3.zero();
-    this.scale = Vector3.one();
+    this.position = Vector3.ZERO;
+    this.rotation = Vector3.ZERO;
+    this.scale = Vector3.ONE;
     this.localMatrix = new Matrix4();
     this.worldMatrix = new Matrix4();
     [
@@ -54,7 +55,7 @@ class SceneNode {
       this.rotation,
       this.scale,
     ].forEach((v) => v.onChange(() => this.matrixNeedsUpdate = true));
-    this.uniform = new UniformBuffer($$.Builtins.Uniform.TransformUniform);
+    this.uniform = new UniformBuffer(BuiltinsUniform.TransformUniform);
   }
 
   destroy(node = this) {
@@ -85,12 +86,12 @@ class SceneNode {
       this.localMatrix
         .identity()
         .translate(this.position)
-        .rotate(this.rotation.x, Vector3.right())
-        .rotate(this.rotation.y, Vector3.up())
-        .rotate(this.rotation.z, Vector3.front())
+        .rotate(this.rotation.x, Vector3.RIGHT)
+        .rotate(this.rotation.y, Vector3.UP)
+        .rotate(this.rotation.z, Vector3.FORWARD)
         .scale(this.scale);
       // update world matrix
-      this.worldMatrix.copy(this.parent?.worldMatrix ?? new Matrix4()).mulRight(this.localMatrix);
+      this.worldMatrix.copy(this.parent?.worldMatrix ?? new Matrix4()).multiply(this.localMatrix);
       // update children
       this.children.forEach((child) => child.matrixNeedsUpdate = true);
     }
@@ -98,11 +99,11 @@ class SceneNode {
 
   updateUniform(device, camera) {
     const modelMatrix = this.worldMatrix;
-    const modelViewMatrix = modelMatrix.clone().mulLeft(camera.viewMatrix);
-    const normalViewMatrix = new Matrix3().fromMat4(modelViewMatrix.clone().invert().transpose());
-    this.uniform.set(device, $$.Builtins.Matrix.ModelMatrix.name, modelMatrix.buffer);
-    this.uniform.set(device, $$.Builtins.Matrix.ModelViewMatrix.name, modelViewMatrix.buffer);
-    this.uniform.set(device, $$.Builtins.Matrix.NormalMatrix.name, normalViewMatrix.buffer);
+    const modelViewMatrix = camera.viewMatrix.clone().multiply(modelMatrix);
+    const normalViewMatrix = new Matrix3().fromMatrix4(modelViewMatrix.clone().invert().transpose());
+    this.uniform.set(device, BuiltinsMatrix.ModelMatrix.name, modelMatrix.elements.buffer);
+    this.uniform.set(device, BuiltinsMatrix.ModelViewMatrix.name, modelViewMatrix.elements.buffer);
+    this.uniform.set(device, BuiltinsMatrix.NormalMatrix.name, normalViewMatrix.elements.buffer);
   }
 }
 

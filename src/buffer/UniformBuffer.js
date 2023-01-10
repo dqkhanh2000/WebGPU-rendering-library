@@ -1,7 +1,6 @@
+import { GPUBufferUsage, GPUShaderStage } from "../utils/WebGPUTypes.js";
 import { BufferObject } from "./BufferObject.js";
 
-const GPUBufferUsage = window.GPUBufferUsage;
-const GPUShaderStage = window.GPUShaderStage;
 class UniformBuffer extends BufferObject {
   binding;
 

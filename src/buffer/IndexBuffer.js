@@ -1,6 +1,6 @@
+import { GPUBufferUsage } from "../utils/WebGPUTypes.js";
 import { BufferObject } from "./BufferObject.js";
 
-const GPUBufferUsage = window.GPUBufferUsage;
 class IndexBuffer extends BufferObject {
   format;
 

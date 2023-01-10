@@ -1,5 +1,4 @@
-const GPUBufferUsage = window.GPUBufferUsage;
-class BufferObject {
+import { GPUBufferUsage } from "../utils/WebGPUTypes";
   label;
 
   size;

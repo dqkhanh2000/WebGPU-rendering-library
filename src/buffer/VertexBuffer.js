@@ -1,6 +1,7 @@
+import { GPUBufferUsage } from "../utils/WebGPUTypes.js";
+import { BufferAttribute } from "./bufferAttributes.js";
 import { BufferObject } from "./BufferObject.js";
 
-const GPUBufferUsage = window.GPUBufferUsage;
 class VertexBuffer extends BufferObject {
   name;
 

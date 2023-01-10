@@ -1,6 +1,6 @@
 import { IndexBuffer } from "../buffer/IndexBuffer.js";
 import { VertexBuffer } from "../buffer/VertexBuffer.js";
-import { Vector3 } from "../math/Vector.js";
+import { Vector3 } from "../math/Vector3";
 
 class BufferGeometry {
   position;
@@ -95,9 +95,9 @@ class BufferGeometry {
       const n0 = p01.clone().cross(p02);
       const n1 = p01.clone().cross(p12);
       const n2 = p20.clone().cross(p21);
-      const l0 = p12.len();
-      const l1 = p20.len();
-      const l2 = p01.len();
+      const l0 = p12.length();
+      const l1 = p20.length();
+      const l2 = p01.length();
       const h = (l0 + l1 + l2) / 2;
       const area = Math.sqrt(h * (h - l0) * (h - l1) * (h - l2));
       tmp[i0].push([n0, area]);
@@ -106,14 +106,16 @@ class BufferGeometry {
     }
     const normals = tmp.map((p) => {
       let weight = 0;
-      const normal = Vector3.zero();
+      const normal = Vector3.ZERO;
       for (const [n, w] of p) {
-        normal.add(n.mul(w));
+        normal.add(n.scale(w));
         weight += w;
       }
-      return weight ? normal.div(weight).toArray() : normal;
+      let output = weight ? normal.scale(1 / weight).toArray() : normal.toArray();
+      return output;
     });
-    return new Float32Array(normals.flat());
+    let flatted = normals.flat();
+    return new Float32Array(flatted);
   }
 }
 

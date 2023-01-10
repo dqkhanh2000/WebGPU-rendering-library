@@ -1,11 +1,12 @@
-import { Vector3, Vector2 } from "../math/Vector.js";
+import { Vector2 } from "../math/Vector2";
+import { Vector3 } from "../math/Vector3";
 
 class OrbitControl {
   camera;
 
   canvas;
 
-  target = Vector3.zero();
+  target = Vector3.ZERO;
 
   rotateAzimuthFactor = 2;
 
@@ -31,13 +32,13 @@ class OrbitControl {
     const p0 = this.camera.lookAt;
     const p1 = this.camera.position;
     const p01 = p1.clone().sub(p0);
-    this._radius = p01.len();
+    this._radius = p01.length();
     this._azimuthAngle = Math.atan(p01.x / p01.z);
     this._polarAngle = Math.acos(p01.y / this._radius);
     let isActive = false;
-    const startPos = Vector2.zero();
-    const currentPos = Vector2.zero();
-    const deltaPos = Vector2.zero();
+    const startPos = Vector2.ZERO;
+    const currentPos = Vector2.ZERO;
+    const deltaPos = Vector2.ZERO;
     const onMouseDown = (ev) => {
       startPos.set(ev.x, ev.y);
       isActive = true;

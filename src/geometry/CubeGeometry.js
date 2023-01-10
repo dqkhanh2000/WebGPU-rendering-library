@@ -1,11 +1,11 @@
 import { BufferGeometry } from "./BufferGeometry.js";
-import { Vector3 } from "../math/Vector.js";
+import { Vector3 } from "../math/Vector3";
 
 class CubeGeometry extends BufferGeometry {
   cubeSize;
 
   constructor(cubeSize = new Vector3(1, 1, 1)) {
-    const { x: hx, y: hy, z: hz } = cubeSize.clone().div(2);
+    const { x: hx, y: hy, z: hz } = cubeSize.clone().scale(0.5);
     const t03 = 0;
     const t13 = 1 / 3;
     const t23 = 2 / 3;

@@ -64,7 +64,7 @@ class GLTFLoader extends BaseLoader {
       node = new SceneNode();
     }
     const position = _node.getTranslation();
-    const quat = new Quaternion(_node.getRotation());
+    const quat = new Quaternion(..._node.getRotation());
     const rotation = quat.getEuler();
     const scale = _node.getScale();
     node.position.set(...position);
@@ -88,25 +88,25 @@ class GLTFLoader extends BaseLoader {
   }
 
   parseGeometry(_mesh) {
-    const premitive = _mesh.listPrimitives()[0];
-    const vertices = premitive.getAttribute("POSITION");
-    const indices = premitive.getIndices();
-    const normal = premitive.getAttribute("NORMAL");
-    const uv = premitive.getAttribute("TEXCOORD_0");
-    const color = premitive.getAttribute("COLOR_0");
+    const primitive = _mesh.listPrimitives()[0];
+    const vertices = primitive.getAttribute("POSITION");
+    const indices = primitive.getIndices();
+    const normal = primitive.getAttribute("NORMAL");
+    const uv = primitive.getAttribute("TEXCOORD_0");
+    const color = primitive.getAttribute("COLOR_0");
     const geometry = new BufferGeometry({
       position : vertices.getArray(),
       normal   : normal?.getArray() ?? new Float32Array(),
       uv       : uv?.getArray() ?? new Float32Array(),
-      color    : color?.getArray() ?? new Float32Array(),
+      color    : color?.getArray(),
       index    : indices.getArray(),
     });
     return geometry;
   }
 
   parseMaterial(_mesh) {
-    const premitive = _mesh.listPrimitives()[0];
-    const _mat = premitive.getMaterial();
+    const primitive = _mesh.listPrimitives()[0];
+    const _mat = primitive.getMaterial();
     let baseColorTexture = DefaultTexture;
     let normalTexture = DefaultTexture;
     let metallicRoughnessTexture = DefaultTexture;

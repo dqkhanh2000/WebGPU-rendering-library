@@ -24,17 +24,17 @@ class PerspectiveCamera extends Camera {
   updateMatrix(device) {
     if (this.needsUpdateViewMatrix) {
       this.viewMatrix.lookAt(this.position, this.lookAt, this.up);
-      this.uniform.set(device, Camera.UniformKeys.VIEW_MATRIX, this.viewMatrix.buffer);
-      const cameraPosBuffer = new Float32Array(this.position.toArray()).buffer;
+      this.uniform.set(device, Camera.UniformKeys.VIEW_MATRIX, this.viewMatrix.elements.buffer);
+      const cameraPosBuffer = this.position.array.buffer;
       this.uniform.set(device, Camera.UniformKeys.CAMERA_POS, cameraPosBuffer);
     }
     if (this.needsUpdateProjectionMatrix) {
       this.projectionMatrix.perspective(this.fov * Math.PI / 180, this.aspect, this.near, this.far);
-      this.uniform.set(device, Camera.UniformKeys.PROJECTION_MATRIX, this.projectionMatrix.buffer);
+      this.uniform.set(device, Camera.UniformKeys.PROJECTION_MATRIX, this.projectionMatrix.elements.buffer);
     }
     if (this.needsUpdateViewMatrix || this.needsUpdateProjectionMatrix) {
-      const VPInvMatrix = this.projectionMatrix.clone().mulRight(this.viewMatrix).invert();
-      this.uniform.set(device, Camera.UniformKeys.VIEW_PROJECTION_INVERSE, VPInvMatrix.buffer);
+      const VPInvMatrix = this.projectionMatrix.clone().multiply(this.viewMatrix).invert();
+      this.uniform.set(device, Camera.UniformKeys.VIEW_PROJECTION_INVERSE, VPInvMatrix.elements.buffer);
     }
     this.needsUpdateViewMatrix = false;
     this.needsUpdateProjectionMatrix = false;
