@@ -1,5 +1,5 @@
 import { Mesh } from "../objects/Mesh.js";
-import { Vector2 } from "../math/Vector.js";
+import { Vector2 } from "../math/Vector2";
 import { SceneNode } from "../objects/SceneNode.js";
 import { TextureObject } from "../buffer/TextureObject.js";
 import { PerspectiveCamera } from "../camera/PerspectiveCamera.js";
@@ -7,6 +7,10 @@ import { ShaderMaterial } from "../material/ShaderMaterial.js";
 import { checkGPU } from "./GPUInstance.js";
 import { RenderPipeline } from "./RenderPipeline.js";
 import { FrameController } from "./FrameController.js";
+import { DirectionLight } from "../light/DirectionLight.js";
+import { PointLight } from "../light/PointLight.js";
+import { AmbientLight } from "../light/AmbientLight.js";
+import { Light } from "../light/Light.js";
 
 const GPUTextureUsage = window.GPUTextureUsage ?? {};
 class Renderer {
@@ -35,6 +39,8 @@ class Renderer {
       dimension: "cube",
     },
   });
+
+  lights = {};
 
   // check webgpu support
   gpu;
@@ -82,6 +88,27 @@ class Renderer {
       console.warn(err);
       this.stop();
     });
+  }
+
+  addLight(light) {
+    if (light instanceof DirectionLight) {
+      if (!this.lights.directionLight) {
+        this.lights.directionLight = [];
+      }
+      this.lights.directionLight.push(light);
+    }
+    else if (light instanceof PointLight) {
+      if (!this.lights.pointLight) {
+        this.lights.pointLight = [];
+      }
+      this.lights.pointLight.push(light);
+    }
+    else if (light instanceof AmbientLight || light instanceof Light) {
+      if (!this.lights.ambientLight) {
+        this.lights.ambientLight = [];
+      }
+      this.lights.ambientLight.push(light);
+    }
   }
 
   start() {

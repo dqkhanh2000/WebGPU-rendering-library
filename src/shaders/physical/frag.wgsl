@@ -18,6 +18,13 @@ struct TransformUniform {
   NormalMatrix: mat4x4<f32>,
 };
 
+struct MaterialUniforms {
+  baseColorFactor : vec4<f32>,
+  metallicRoughnessFactor : vec2<f32>,
+  emissiveFactor : vec3<f32>,
+  occlusionStrength : f32,
+};
+
 @group(0)
 @binding(0)
 var<uniform> camera: CameraUniform;
@@ -50,20 +57,32 @@ fn DistributionBlinnPhong(cosNH: f32, m: f32) -> f32 {
   return (m + 8.0) * pow(cosNH, m) / (8.0 * PI);
 }
 
-fn DistributionGGX(cosNH2: f32, roughness2: f32) -> f32 {
-  let t: f32 = cosNH2 * (roughness2 - 1.0) + 1.0;
-  return roughness2 / (PI * t * t);
+fn DistributionGGX(N: vec3<f32>, H: vec3<f32>, roughness: f32) -> f32 {
+  let a: f32 = roughness*roughness;
+  let a2 :f32 = a*a;
+  let NdotH :f32 = max(dot(N, H), 0.0);
+  let NdotH2 :f32 = NdotH*NdotH;
+	
+  let nom :f32 = a2;
+  var denom :f32 = (NdotH2 * (a2 - 1.0) + 1.0);
+  denom = PI * denom * denom;
+  return nom / denom;
 }
 
-fn GeometrySchlickGGX(cosTheta: f32, k: f32) -> f32 {
-  let denom = cosTheta * (1.0 - k) + k;
-  return cosTheta / denom;
+fn GeometrySchlickGGX(NdotV: f32, roughness: f32) -> f32 {
+  let r :f32 = roughness + 1.0;
+  let k = r*r / 8.0;
+  let denom :f32 = NdotV * (1.0 - k) + k;
+  return NdotV / denom;
 }
 
-fn GeometrySmith(cosNL: f32, cosNV: f32, roughness: f32) -> f32 {
-  let r: f32 = (roughness + 1.0);
-  let k: f32 = r * r / 8.0;
-  return GeometrySchlickGGX(cosNL, k) * GeometrySchlickGGX(cosNV, k);
+fn GeometrySmith(N: vec3<f32>, V: vec3<f32>, L: vec3<f32>, k: f32) -> f32 {
+  let NdotV: f32 = max(dot(N, V), 0.0);
+  let NdotL: f32 = max(dot(N, L), 0.0);
+  let ggx1 : f32= GeometrySchlickGGX(NdotV, k);
+  let ggx2 : f32= GeometrySchlickGGX(NdotL, k);
+
+  return ggx1 * ggx2;
 }
 
 fn fresnelSchlick(cosTheta: f32, F0: vec3<f32>) -> vec3<f32> {
@@ -81,7 +100,7 @@ fn main(
 ) -> @location(0) vec4<f32> {
 
   let texAbedo: vec3<f32> = textureSample(baseColorTexture, mySampler, uv).rgb;
-  let texNormal: vec3<f32> = textureSample(normalTexture, mySampler, uv).rgb * 2.0 - 1.0;
+  let texNormal: vec3<f32> = textureSample(normalTexture, mySampler, uv).rgb;
   let texMetallicRoughness: vec3<f32> = textureSample(metallicRoughnessTexture, mySampler, uv).rgb;
   let texEmissive: vec3<f32> = textureSample(emissiveTexture, mySampler, uv).rgb;
   let texAO: vec3<f32> = textureSample(aoTexture, mySampler, uv).rgb;
@@ -90,15 +109,13 @@ fn main(
 
   let N: vec3<f32> = normalize((transform.ModelMatrix * vec4<f32>(normalize(TBN * texNormal), 1.0)).xyz);
   let L: vec3<f32> = normalize(dictionalLightDir - worldPosition);
-  let V = normalize(camera.CameraPos - worldPosition);
+  let V: vec3<f32> = normalize(camera.CameraPos - worldPosition);
   let H: vec3<f32> = normalize(L + V);
 
   let radiance: vec3<f32> = textureSample(envTexture, mySampler, reflect(-V, N)).rgb;
   let diffuse = dictionalLightColor * dictionalLightIndensity * texAbedo;
   
   let roughness: f32 = texMetallicRoughness.g;
-  let roughness2: f32 = roughness * roughness;
-  let roughness4: f32 = roughness2 * roughness2;
   let metallic: f32 = texMetallicRoughness.b;
 
   // calc angles
@@ -108,11 +125,11 @@ fn main(
   let cosNH2: f32 = cosNH * cosNH;
 
   // calc brdf
-  let D: f32 = DistributionGGX(cosNH2, roughness2);
+  let D: f32 = DistributionGGX(N, H, roughness);
   // let D: f32 = DistributionBlinnPhong(cosNH, 16.0);
   let F0: vec3<f32> = mix(vec3<f32>(0.04), texAbedo, metallic);
   let F: vec3<f32> = fresnelSchlick(cosNL, F0);
-  let G: f32 = GeometrySmith(cosNL, cosNV, roughness4);
+  let G: f32 = GeometrySmith(N, V, L, roughness);
 
   let kS: vec3<f32> = F;
   let kD: vec3<f32> = (1.0 - kS) * (1.0 - metallic);
