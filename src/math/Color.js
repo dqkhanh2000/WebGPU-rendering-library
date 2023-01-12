@@ -187,6 +187,8 @@ export class Color {
   static get YELLOW() { return new Color(255, 255, 0); }
   static get CYAN() { return new Color(0, 255, 255); }
   static get MAGENTA() { return new Color(255, 0, 255); }
+  static get GRAY() { return new Color(128, 128, 128); }
+  static get PURPLE() { return new Color(128, 0, 128); }
   static get TRANSPARENT() { return new Color(0, 0, 0, 0); }
 
 
@@ -553,6 +555,16 @@ export class Color {
      * @returns {Float32Array}
      */
   toArray() {
+    return this.glArray;
+  }
+
+  /**
+     * return an array representation of this object
+     * @memberof Color
+     * @function
+     * @returns {Float32Array}
+     */
+  get array() {
     return this.glArray;
   }
 

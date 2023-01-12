@@ -169,6 +169,14 @@ export class Vector4 extends Vector3 {
   }
 
   /**
+   * Check this vector is equal to another vector.
+   * @param {Vector4} v - The other vector.
+   */
+  equals(v) {
+    return super.equals(v) && this.w === v.w;
+  }
+
+  /**
    * Return a new vector that is the result of the linear interpolation between this vector and another vector.
    * @param {Vector4} v - The other vector.
    * @param {number} t - The interpolation factor.

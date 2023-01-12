@@ -151,6 +151,14 @@ export class Vector2 {
   }
 
   /**
+   * Check this vector is equal to another vector.
+   * @param {Vector2} v - The other vector.
+   */
+  equals(v) {
+    return this.x === v.x && this.y === v.y;
+  }
+
+  /**
    * Create a copy of this vector.
    * @returns {Vector2} - The new vector.
    */
