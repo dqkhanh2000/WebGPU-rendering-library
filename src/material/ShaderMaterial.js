@@ -150,6 +150,19 @@ class ShaderMaterial {
     }
 
   }
+
+  /**
+   * Attach light to material
+   * @param {object} lights - The lights to attach
+   * @param {object} lights.directionLight - The direction light
+   * @param {array<DirectionLight>} lights.directionLight.lights - The list of direction lights
+   * @param {object} lights.pointLight - The point light
+   * @param {array<PointLight>} lights.pointLight.lights - The list of point lights
+   * @param {object} lights.ambientLight - The ambient light
+   */
+  attachLight(lights) {
+    this.lights = lights;
+  }
 }
 
 export { ShaderMaterial };

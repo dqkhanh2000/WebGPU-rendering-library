@@ -11,6 +11,9 @@ import { DirectionLight } from "../light/DirectionLight.js";
 import { PointLight } from "../light/PointLight.js";
 import { AmbientLight } from "../light/AmbientLight.js";
 import { Light } from "../light/Light.js";
+import { UniformBuffer } from "../buffer/UniformBuffer.js";
+import { BuiltinLight, BuiltinsUniform } from "../utils/constants.js";
+import { Color } from "../math/Color.js";
 
 const GPUTextureUsage = window.GPUTextureUsage ?? {};
 class Renderer {
@@ -40,7 +43,21 @@ class Renderer {
     },
   });
 
-  lights = {};
+  lights = {
+    ambientLight   : new AmbientLight({ intensity: 0 }),
+    directionLight : {
+      lights: [
+        new DirectionLight({ intensity: 0 }),
+      ],
+      buffer: undefined,
+    },
+    pointLight: {
+      lights: [
+        new PointLight({ intensity: 0, color: new Color(0, 0, 0) }),
+      ],
+      buffer: undefined,
+    },
+  };
 
   // check webgpu support
   gpu;
@@ -93,21 +110,68 @@ class Renderer {
   addLight(light) {
     if (light instanceof DirectionLight) {
       if (!this.lights.directionLight) {
-        this.lights.directionLight = [];
+        this.lights.directionLight = {};
+        this.lights.directionLight.lights = [];
       }
-      this.lights.directionLight.push(light);
+      this.lights.directionLight.lights.push(light);
     }
     else if (light instanceof PointLight) {
       if (!this.lights.pointLight) {
-        this.lights.pointLight = [];
+        this.lights.pointLight = {};
+        this.lights.pointLight.lights = [];
       }
-      this.lights.pointLight.push(light);
+      this.lights.pointLight.lights.push(light);
     }
     else if (light instanceof AmbientLight || light instanceof Light) {
-      if (!this.lights.ambientLight) {
-        this.lights.ambientLight = [];
+      this.lights.ambientLight = light;
+    }
+    this.needRecreateLightBuffer = true;
+  }
+
+  updateLightBuffer(device) {
+    if (this.lights) {
+      let directionLightLength = 0;
+      if (this.lights.directionLight && this.lights.directionLight.lights.length > 0) {
+        directionLightLength = this.lights.directionLight.lights.length;
       }
-      this.lights.ambientLight.push(light);
+
+      let pointLightLength = 0;
+      if (this.lights.pointLight && this.lights.pointLight.lights.length > 0) {
+        pointLightLength = this.lights.pointLight.lights.length;
+      }
+
+      if (!this.lights.uniformBuffer || this.needRecreateLightBuffer) {
+        let uniformDescription = JSON.parse(JSON.stringify(BuiltinsUniform.LightUniform));
+
+        uniformDescription.items[1].size *= pointLightLength;
+        uniformDescription.items[2].size *= directionLightLength;
+
+        this.lights.uniformBuffer = new UniformBuffer(uniformDescription);
+        this.needRecreateLightBuffer = false;
+      }
+
+      this.lights.uniformBuffer.set(device, BuiltinLight.AmbientLight.name, this.lights.ambientLight.getBuffer().buffer);
+
+      if (directionLightLength > 0) {
+        if (!this.directionLightBuffer || this.directionLightBuffer.length !== directionLightLength * DirectionLight.BUFFER_SIZE) {
+          this.directionLightBuffer = new Float32Array(directionLightLength * DirectionLight.BUFFER_SIZE);
+        }
+        this.lights.directionLight?.lights.forEach((light, index) => {
+          this.directionLightBuffer.set(light.getBuffer(), index * DirectionLight.BUFFER_SIZE);
+        });
+        this.lights.uniformBuffer.set(device, BuiltinLight.DirectionLight.name, this.directionLightBuffer.buffer);
+      }
+
+      if (pointLightLength > 0) {
+        if (!this.pointLightBuffer || this.pointLightBuffer.length !== pointLightLength * PointLight.BUFFER_SIZE) {
+          this.pointLightBuffer = new Float32Array(pointLightLength * PointLight.BUFFER_SIZE);
+        }
+        for (let i = 0; i < pointLightLength; i++) {
+          let light = this.lights.pointLight.lights[i];
+          this.pointLightBuffer.set(light.getBuffer(), i * PointLight.BUFFER_SIZE);
+        }
+        this.lights.uniformBuffer.set(device, BuiltinLight.PointLight.name, this.pointLightBuffer.buffer);
+      }
     }
   }
 
@@ -145,6 +209,10 @@ class Renderer {
     this.camera.updateMatrix(device);
     // on update
     this._updateCallbacks.forEach((cb) => cb());
+
+    // update light buffer
+    this.updateLightBuffer(device);
+
     // render
     this._colorAttachments[0].view = ctx.getCurrentTexture().createView();
     const commandEncoder = device.createCommandEncoder();
@@ -171,6 +239,7 @@ class Renderer {
     const { camera, presentationFormat } = this;
     const uniforms = [camera.uniform, node.uniform];
     node.updateUniform(device, camera);
+    material.attachLight(this.lights);
     // get redner pipeline from cache
     let renderPipeline = this._cachedPipline.get(material);
     if (!renderPipeline) {
@@ -190,13 +259,16 @@ class Renderer {
       });
       this._cachedPipline.set(material, renderPipeline);
     }
+    const bindGroupEntry = uniforms.map((u) => u.getBindGroupEntry(device));
     const bindGroup = device.createBindGroup({
       layout  : renderPipeline.pipeline.getBindGroupLayout(0),
-      entries : uniforms.map((u) => u.getBindGroupEntry(device)),
+      entries : bindGroupEntry,
     });
     const materialBindGroup = material.getBindGroup(device, renderPipeline.pipeline.getBindGroupLayout(1), this.cubemap);
     passEncoder.setPipeline(renderPipeline.pipeline);
+    // set bind group for vertex shader
     passEncoder.setBindGroup(0, bindGroup);
+    // set bind group for fragment shader
     passEncoder.setBindGroup(1, materialBindGroup);
     geometry.attachVertexBuffer(device, passEncoder);
     geometry.attachIndexBuffer(device, passEncoder);

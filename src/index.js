@@ -1,3 +1,13 @@
+export { CylinderGeometry } from "./geometry/CylinderGeometry.js";
+export { PlaneGeometry } from "./geometry/PlaneGeometry.js";
+export { CapsuleGeometry } from "./geometry/CapsuleGeometry.js";
+export { LatheGeometry } from "./geometry/LatheGeometry.js";
+
+export { AmbientLight } from "./light/AmbientLight.js";
+export { DirectionLight } from "./light/DirectionLight.js";
+export { Light } from "./light/Light.js";
+export { PointLight } from "./light/PointLight.js";
+
 export { BufferObject } from "./buffer/BufferObject.js";
 export { VertexBuffer } from "./buffer/VertexBuffer.js";
 export { IndexBuffer } from "./buffer/IndexBuffer.js";
@@ -12,16 +22,19 @@ export { Vector3 } from "./math/Vector3.js";
 export { Vector4 } from "./math/Vector4.js";
 export { Matrix3 } from "./math/Matrix3.js";
 export { Matrix4 } from "./math/Matrix4.js";
+export { Color } from "./math/Color.js";
 export { SceneNode } from "./objects/SceneNode.js";
 export { Mesh } from "./objects/Mesh.js";
 export { Skybox } from "./objects/Skybox.js";
 export { BufferGeometry } from "./geometry/BufferGeometry.js";
 export { CubeGeometry } from "./geometry/CubeGeometry.js";
+export { BoxGeometry } from "./geometry/BoxGeometry.js";
 export { SphereGeometry } from "./geometry/SphereGeometry.js";
 export { ShaderMaterial } from "./material/ShaderMaterial.js";
 export { NormalMaterial } from "./material/NormalMaterial.js";
 export { PhysicalMaterial } from "./material/PhysicalMaterial.js";
 export { SkyboxMaterial } from "./material/SkyboxMaterial.js";
+export { LambertMaterial } from "./material/LambertMaterial.js";
 export { uuid } from "./utils/uuid.js";
 export { GLTFLoader } from "./loaders/GLTFLoader.js";
 export { TextureLoader } from "./loaders/TextureLoader.js";

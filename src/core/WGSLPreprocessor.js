@@ -1,11 +1,26 @@
+const regex = /\$\{(.*)\}/gm;
 export default class WGSLPreProcess {
 
-  static process(source, inputDirectives = []) {
+  static process(source, inputDirectives = [], replaceDirectives = {}) {
     let processedSource = "";
     let lines = source.split("\n");
 
     for (let i = 0; i < lines.length; i++) {
       let line = lines[i];
+
+      // replace directives in regex \$\{(.*)\}
+      if (line.includes("${")) {
+        let match = regex.exec(line);
+        while (match !== null) {
+          let directive = match[1];
+          let replaceValue = replaceDirectives[directive];
+          if (directive) {
+            line = line.replace(match[0], replaceValue);
+          }
+          match = regex.exec(line);
+        }
+      }
+
       if (line.startsWith("#if")) {
         let { directiveBlock, continueLineIndex } = this._getDirectiveBlock(lines, i);
         let processedDirectiveBlock = this._processDirectiveBlock(directiveBlock, inputDirectives);
