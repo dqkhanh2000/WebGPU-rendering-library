@@ -2,19 +2,48 @@ import { IndexBuffer } from "../buffer/IndexBuffer.js";
 import { VertexBuffer } from "../buffer/VertexBuffer.js";
 import { Vector3 } from "../math/Vector3";
 
+/**
+ * Class representing a Buffer Geometry
+ * @class
+ */
 class BufferGeometry {
+  /**
+   * @type {VertexBuffer}
+   */
   position;
 
+  /**
+   * @type {VertexBuffer}
+   */
   uv;
 
+  /**
+   * @type {VertexBuffer}
+   */
   normal;
 
+  /**
+   * @type {VertexBuffer}
+   */
   color;
 
+  /**
+   * @type {IndexBuffer}
+   */
   index;
 
+  /**
+   * @type {Array}
+   */
   vertexBufferLayouts;
 
+  /**
+   * @param {Object} props - The properties for the buffer geometry.
+   * @param {Float32Array} props.position - The position data.
+   * @param {Float32Array} props.uv - The uv data (optional).
+   * @param {Float32Array} props.color - The color data (optional).
+   * @param {Uint32Array} props.index - The index data.
+   */
   constructor(props) {
     this.position = new VertexBuffer({
       name         : "position",
@@ -55,10 +84,17 @@ class BufferGeometry {
     ].map((buffer) => buffer.bufferLayout);
   }
 
+  /**
+   * Returns the number of indices.
+   * @return {number}
+   */
   get indexCount() {
     return this.index.data.length;
   }
 
+  /**
+   * Destroys the buffer geometry.
+   */
   destroy() {
     this.position.destroy();
     this.uv.destroy();
@@ -67,6 +103,11 @@ class BufferGeometry {
     this.index.destroy();
   }
 
+  /**
+   * Attaches vertex buffer to the device and pass encoder.
+   * @param {Device} device - The device object.
+   * @param {PassEncoder} passEncoder - The pass encoder.
+   */
   attachVertexBuffer(device, passEncoder) {
     this.position.attach(device, passEncoder);
     this.uv.attach(device, passEncoder);
@@ -74,10 +115,19 @@ class BufferGeometry {
     this.color.attach(device, passEncoder);
   }
 
+  /**
+   * Attaches index buffer to the device and pass encoder.
+   * @param {Device} device - The device object.
+   * @param {PassEncoder} passEncoder - The pass encoder.
+   */
   attachIndexBuffer(device, passEncoder) {
     this.index.attach(device, passEncoder);
   }
 
+  /**
+   * Computes vertex normals for the buffer geometry.
+   * @return {Float32Array}
+   */
   computeVertexNormals() {
     const vertices = this.position.data;
     const indices = this.index.data;

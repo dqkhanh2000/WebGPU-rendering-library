@@ -1,3 +1,6 @@
+/**
+ * Class BaseLoader
+ */
 class BaseLoader {
 }
 

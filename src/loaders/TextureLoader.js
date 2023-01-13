@@ -2,7 +2,17 @@ import { TextureObject } from "../buffer/TextureObject.js";
 import { BaseLoader } from "./BaseLoader.js";
 
 const GPUTextureUsage = window.GPUTextureUsage ?? {};
+
+/**
+ Class representing a Texture Loader.
+ @extends BaseLoader
+ */
 class TextureLoader extends BaseLoader {
+  /**
+   Asynchronously loads a Texture from a URL.
+   @param {string} url - The URL of the Texture to load.
+   @returns {Promise<TextureObject>} A promise that resolves to the loaded Texture.
+   */
   async loadAsync(url) {
     const img = await this.getImage(url);
     const texture = new TextureObject({
@@ -18,6 +28,11 @@ class TextureLoader extends BaseLoader {
     return texture;
   }
 
+  /**
+   Asynchronously loads a cubemap from a list of URLs.
+   @param {string[]} urls - An array of URLs of the 6 faces of the cubemap to load.
+   @returns {Promise<TextureObject>} A promise that resolves to the loaded cubemap.
+   */
   async loadCubemapAsync(urls) {
     const imgs = await Promise.all(urls.map(this.getImage));
     const texture = new TextureObject({
@@ -36,6 +51,11 @@ class TextureLoader extends BaseLoader {
     return texture;
   }
 
+  /**
+   Returns an Image object from a given URL.
+   @param {string} url - The URL of the image.
+   @returns {Promise<Image>} A promise that resolves to the loaded image.
+   */
   getImage(url) {
     return new Promise((resolve) => {
       const img = new Image();

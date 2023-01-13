@@ -23,9 +23,22 @@ const DefaultTexture = new TextureObject({
             | GPUTextureUsage.RENDER_ATTACHMENT,
   },
 });
+/**
+ Class representing a GLTF Loader.
+ @extends BaseLoader
+ */
 class GLTFLoader extends BaseLoader {
+  /**
+   A map of textures that are cached.
+   @type {Map<Object, TextureObject>}
+   */
   _cachedTextures = new Map();
 
+  /**
+   Asynchronously loads a GLTF file.
+   @param {string} url - The URL of the GLTF file to load.
+   @returns {Promise<SceneNode>} A promise that resolves to the root node of the GLTF scene.
+   */
   async loadAsync(url) {
     const doc = await io.read(url);
     const root = doc.getRoot();
@@ -54,6 +67,12 @@ class GLTFLoader extends BaseLoader {
     return rootNode;
   }
 
+  /**
+   Parses a GLTF node and adds it to a parent node.
+   @param {Object} _node - The GLTF node to parse.
+   @param {SceneNode} parentNode - The parent node to add the parsed node to.
+   @returns {SceneNode} The parsed node.
+   */
   parseNode(_node, parentNode) {
     let node;
     const _mesh = _node.getMesh();
@@ -77,6 +96,11 @@ class GLTFLoader extends BaseLoader {
     return node;
   }
 
+  /**
+   Parses a GLTF mesh and creates a Mesh object.
+   @param {Object} _mesh - The GLTF mesh to parse.
+   @returns {Mesh} The parsed mesh.
+   */
   parseMesh(_mesh) {
     const geometry = this.parseGeometry(_mesh);
     const material = this.parseMaterial(_mesh);
@@ -87,6 +111,11 @@ class GLTFLoader extends BaseLoader {
     return mesh;
   }
 
+  /**
+   Parses a GLTF geometry and creates a BufferGeometry object.
+   @param {Object} _mesh - The GLTF mesh that contains the geometry to parse.
+   @returns {BufferGeometry} The parsed geometry.
+  */
   parseGeometry(_mesh) {
     const primitive = _mesh.listPrimitives()[0];
     const vertices = primitive.getAttribute("POSITION");
@@ -104,6 +133,11 @@ class GLTFLoader extends BaseLoader {
     return geometry;
   }
 
+  /**
+   Parses a GLTF material and creates a PhysicalMaterial object.
+   @param {Object} _mesh - The GLTF mesh that contains the material to parse.
+   @returns {PhysicalMaterial} The parsed material.
+   */
   parseMaterial(_mesh) {
     const primitive = _mesh.listPrimitives()[0];
     const _mat = primitive.getMaterial();

@@ -14,21 +14,65 @@ const Directives = {
   USE_OCCULSION_MAP          : "USE_OCCULSION_MAP",
 };
 
+/**
+ Class representing a PhysicalMaterial
+ @extends ShaderMaterial
+ */
 class PhysicalMaterial extends ShaderMaterial {
+  /**
+   A TextureObject representing the base color texture
+   @type {TextureObject}
+   */
   baseColorTexture;
 
+  /**
+   A TextureObject representing the normal texture
+   @type {TextureObject}
+   */
   normalTexture;
 
+  /**
+   A TextureObject representing the metallic roughness texture
+   @type {TextureObject}
+   */
   metallicRoughnessTexture;
 
+  /**
+   A TextureObject representing the emissive texture
+   @type {TextureObject}
+   */
   emissiveTexture;
 
+  /**
+   A TextureObject representing the ambient occlusion texture
+   @type {TextureObject}
+   */
   aoTexture;
 
+  /**
+   The GPU bind group for this material
+   @type {GPUBindGroup}
+   @private
+   */
   _bindGroup;
 
+  /**
+   The input directives for this material
+   @type {string[]}
+   */
   inputDirectives = [];
 
+  /**
+   Creates an instance of PhysicalMaterial.
+   It sets the vertexShader and fragmentShader as the shaders passed in the constructor
+   @param {Object} props
+   @param {string} props.blendMode - The blending mode of this material
+   @param {TextureObject} props.baseColorTexture - The base color texture
+   @param {TextureObject} props.normalTexture - The normal texture
+   @param {TextureObject} props.metallicRoughnessTexture - The metallic roughness texture
+   @param {TextureObject} props.emissiveTexture - The emissive texture
+   @param {TextureObject} props.aoTexture - The ambient occlusion texture
+   */
   constructor(props) {
     super({
       name      : "PhysicalMaterial",
@@ -44,6 +88,10 @@ class PhysicalMaterial extends ShaderMaterial {
     this.fragmentShader = WGSLPreProcess.process(fragmentShader, this.inputDirectives);
   }
 
+  /**
+   Initializes the input directives for this material
+   @private
+   */
   _initDirectives() {
     if (this.baseColorTexture) {
       this.inputDirectives.push(Directives.USE_BASE_COLOR_MAP);
@@ -62,6 +110,10 @@ class PhysicalMaterial extends ShaderMaterial {
     }
   }
 
+  /**
+   Returns the layout entries for this material
+   @returns {Array<Object>}
+   */
   getLayoutEntries() {
     return [
       {
@@ -117,6 +169,10 @@ class PhysicalMaterial extends ShaderMaterial {
     ];
   }
 
+  /**
+   Returns the bind group for this material
+   @returns {GPUBindGroup}
+   */
   getBindGroup(device, layout, cubemap) {
     if (!this._bindGroup) {
       this.baseColorTexture.getSampler(device);

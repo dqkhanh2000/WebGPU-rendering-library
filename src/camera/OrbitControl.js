@@ -1,33 +1,88 @@
 import { Vector2 } from "../math/Vector2";
 import { Vector3 } from "../math/Vector3";
 
+/**
+ * A class for controlling camera orbit using mouse input.
+ */
 class OrbitControl {
+  /**
+   * The camera to be controlled.
+   * @type {Object}
+   */
   camera;
 
+  /**
+   * The canvas element to listen for mouse input on.
+   * @type {HTMLCanvasElement}
+   */
   canvas;
 
+  /**
+   * The target point for the camera to orbit around.
+   * @type {Vector3}
+   */
   target = Vector3.ZERO;
 
+  /**
+   * The factor to multiply delta mouse movement by when changing the azimuth angle.
+   * @type {number}
+   */
   rotateAzimuthFactor = 2;
 
+  /**
+   * The factor to multiply delta mouse movement by when changing the polar angle.
+   * @type {number}
+   */
   rotatePolarFactor = 2;
 
+  /**
+   * The factor to multiply delta mouse wheel movement by when changing the camera distance from the target.
+   * @type {number}
+   */
   zoomFactor = 1.0;
 
+  /**
+   * The current distance of the camera from the target.
+   * @private
+   * @type {number}
+   */
   _radius = 0;
 
+  /**
+   * The current azimuth angle of the camera (rotation around the Y-axis).
+   * @private
+   * @type {number}
+   */
   _azimuthAngle = 0;
 
+  /**
+   * The current polar angle of the camera (rotation around the X-axis).
+   * @private
+   * @type {number}
+   */
   _polarAngle = 0;
 
+  /**
+   * A callback function for removing event listeners when disabling orbit rotation.
+   * @private
+   * @type {Function}
+   */
   _disableRotateCallback;
 
+  /**
+   * @param {Object} camera - The camera to be controlled.
+   * @param {HTMLCanvasElement} canvas - The canvas element to listen for mouse input on.
+   */
   constructor(camera, canvas) {
     this.camera = camera;
     this.canvas = canvas;
     this._init();
   }
 
+  /**
+   * Initialize the orbit control by setting the initial camera position,
+   * and adding event listeners for mouse input.
+   */
   _init() {
     const p0 = this.camera.lookAt;
     const p1 = this.camera.position;
@@ -73,10 +128,16 @@ class OrbitControl {
     };
   }
 
+    /**
+   * Disables the rotate function by removing event listeners for mouse input.
+   */
   _disableRotate() {
     this._disableRotateCallback?.();
   }
 
+  /**
+   * Update the camera position based on the current orbit angles and distance from the target.
+   */
   update() {
     const sinTheta = Math.sin(this._polarAngle);
     const cosTheta = Math.cos(this._polarAngle);
@@ -88,6 +149,9 @@ class OrbitControl {
     this.camera.needsUpdateViewMatrix = true;
   }
 
+  /**
+   * Remove event listeners and perform any other necessary cleanup.
+   */
   destory() {
     this._disableRotate();
   }

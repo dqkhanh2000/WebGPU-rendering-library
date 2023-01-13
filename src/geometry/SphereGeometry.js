@@ -2,8 +2,22 @@
 import { Vector3 } from "../math/Vector3";
 import { BufferGeometry } from "./BufferGeometry";
 
+/**
+ * Class representing a SphereGeometry.
+ * @extends BufferGeometry
+ */
 class SphereGeometry extends BufferGeometry {
   // eslint-disable-next-line constructor-super
+  /**
+   * Creates a SphereGeometry.
+   * @param {number} [radius=1] - The radius of the sphere.
+   * @param {number} [widthSegments=32] - The number of segments along the width of the sphere.
+   * @param {number} [heightSegments=16] - The number of segments along the height of the sphere.
+   * @param {number} [phiStart=0] - The starting angle in radians of the sphere's horizontal circumference.
+   * @param {number} [phiLength=Math.PI * 2] - The horizontal circumference angle of the sphere in radians.
+   * @param {number} [thetaStart=0] - The starting angle in radians of the sphere's vertical circumference.
+   * @param {number} [thetaLength=Math.PI] - The vertical circumference angle of the sphere in radians.
+   */
   constructor(radius = 1, widthSegments = 32, heightSegments = 16, phiStart = 0, phiLength = Math.PI * 2, thetaStart = 0, thetaLength = Math.PI) {
     const parameters = {
       radius         : radius,

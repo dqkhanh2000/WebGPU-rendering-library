@@ -1,3 +1,6 @@
+/**
+ * Class representing a Render Pipeline.
+ */
 class RenderPipeline {
   gpu;
 
@@ -25,6 +28,18 @@ class RenderPipeline {
 
   _pipelineLayout;
 
+  /**
+   * @param {gpu} gpu - The GPU object.
+   * @param {Object} props - The properties for the pipeline.
+   * @param {Array} props.bindGroupLayouts - The bind group layouts.
+   * @param {Array} props.vertexBufferLayouts - The vertex buffer layouts.
+   * @param {module} props.vertexShaderModule - The vertex shader module.
+   * @param {module} props.fragmentShaderModule - The fragment shader module.
+   * @param {string} props.presentationFormat - The presentation format (optional).
+   * @param {Object} props.primitive - The primitive object (optional).
+   * @param {Object} props.depthStencil - The depth stencil object (optional).
+   * @param {Object} props.blend - The blend object (optional).
+   */
   constructor(gpu, props) {
     const { device, preferredFormat } = gpu;
     this.gpu = gpu;
@@ -77,6 +92,10 @@ class RenderPipeline {
     });
   }
 
+  /**
+   * Returns the render pipeline object.
+   * @return {Object}
+   */
   get pipeline() {
     return this._pipeline;
   }

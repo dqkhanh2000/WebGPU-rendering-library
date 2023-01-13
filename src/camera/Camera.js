@@ -1,14 +1,10 @@
-
-
 import { UniformBuffer } from "../buffer/UniformBuffer.js";
 import { Matrix4 } from "../math/Matrix4.js";
 import { Vector3 } from "../math/Vector3.js";
-
 /**
  * The base camera class.
  */
 class Camera {
-
   /**
    * The camera position.
    * @type {Vector3}
@@ -49,6 +45,11 @@ class Camera {
    */
   uniform;
 
+  /**
+   * Keys for accessing uniform values
+   * @static
+   * @type {Object}
+   */
   static UniformKeys = {
     VIEW_MATRIX             : "ViewMatrix",
     PROJECTION_MATRIX       : "ProjectionMatrix",
@@ -56,10 +57,25 @@ class Camera {
     VIEW_PROJECTION_INVERSE : "ViewProjectionInverseMatrix",
   };
 
+  /**
+   * Flag to indicate whether viewMatrix needs to be updated
+   * @type {Boolean}
+   */
   needsUpdateViewMatrix;
 
+  /**
+   * Flag to indicate whether projectionMatrix needs to be updated
+   * @type {Boolean}
+   */
   needsUpdateProjectionMatrix;
 
+  /**
+   * Create a new Camera object
+   * @param {Object} props 
+   * @param {Vector3} props.position - the position of the camera
+   * @param {Vector3} [props.lookAt=Vector3.ZERO] - the point the camera is looking at
+   * @param {Vector3} [props.up=Vector3.UP] - the up vector for the camera
+   */
   constructor(props) {
     this.position = props.position ?? new Vector3(3, 3, 3);
     this.lookAt = props.lookAt ?? new Vector3(0, 0, 0);
@@ -80,6 +96,10 @@ class Camera {
     });
   }
 
+  /**
+   * Destroys the Camera object
+   *
+   */
   destroy() {
     this.uniform.destroy();
   }

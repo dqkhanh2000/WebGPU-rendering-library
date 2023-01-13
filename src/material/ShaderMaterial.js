@@ -1,26 +1,88 @@
+/**
+ ShaderMaterial is the base class for creating custom materials using shaders.
+ It provides a common interface for creating and managing vertex and fragment shaders,
+ and defines the default blend mode.
+ @class ShaderMaterial
+ */
 class ShaderMaterial {
+  /**
+   The name of the material.
+   @type {string}
+   @memberof ShaderMaterial
+   */
   name;
 
+  /**
+   The vertex shader code.
+   @type {string}
+   @memberof ShaderMaterial
+   */
   vertexShader;
 
+  /**
+   The fragment shader code.
+   @type {string}
+   @memberof ShaderMaterial
+   */
   fragmentShader;
 
+  /**
+   The cull mode.
+   @type {string}
+   @memberof ShaderMaterial
+   */
   cullMode = "back";
 
+  /**
+   The topology.
+   @type {string}
+   @memberof ShaderMaterial
+   */
   topology = "triangle-list";
 
+  /**
+   The blend mode.
+   @type {string}
+   @memberof ShaderMaterial
+   */
   blendMode = "OPAQUE";
 
+  /**
+   The cached vertex shader module.
+   @type {WebGPUShaderModule}
+   @memberof ShaderMaterial
+   */
   _vertexShaderModule;
 
+  /**
+    * The fragment shader module 
+    * @type {WebGPUShaderModule}
+    */
   _fragmentShaderModule;
 
+  /**
+    * A cache for storing shader modules
+    * @type {Map<string, WebGPUShaderModule>}
+    */
   static _cachedShader = new Map();
 
+  /**
+   Clears the cache of ShaderMaterial instances.
+   @static
+   */
   static clearCache() {
     ShaderMaterial._cachedShader.clear();
   }
 
+  /**
+   Constructor for the ShaderMaterial class.
+   @constructor
+   @param {Object} props - The properties to initialize the ShaderMaterial with.
+   @param {string} [props.name="ShaderMaterial"] - The name of the material.
+   @param {string} props.vertexShader - The vertex shader code for the material.
+   @param {string} props.fragmentShader - The fragment shader code for the material.
+   @param {string} [props.blendMode="OPAQUE"] - The blend mode for the material.
+   */
   constructor(props) {
     this.name = props.name ?? "ShaderMaterial";
     this.vertexShader = props.vertexShader;
@@ -28,11 +90,22 @@ class ShaderMaterial {
     this.blendMode = props.blendMode ?? "OPAQUE";
   }
 
+  /**
+   @function destroy
+   @desc Clears the cached vertex and fragment shader modules from this ShaderMaterial object.
+   */
   destroy() {
     this._vertexShaderModule = undefined;
     this._fragmentShaderModule = undefined;
   }
 
+  /**
+   @function createShaderModule
+   @param {Object} device - The WebGPU device.
+   @param {String} code - The code for the shader module.
+   @returns {Object} The created shader module.
+   @desc Creates a new WebGPU shader module and caches it for future use.
+   */
   createShaderModule(device, code) {
     let shaderModule = ShaderMaterial._cachedShader.get(code);
     if (!shaderModule) {
@@ -42,6 +115,12 @@ class ShaderMaterial {
     return shaderModule;
   }
 
+  /**
+   @function getVertexShaderModule
+   @param {Object} device - The WebGPU device.
+   @returns {Object} The vertex shader module.
+   @desc Returns the cached vertex shader module for this ShaderMaterial object. If the module has not been cached yet, it will create a new one using the provided device and vertex shader code.
+   */
   getVertexShaderModule(device) {
     if (!this._vertexShaderModule) {
       this._vertexShaderModule = this.createShaderModule(device, this.vertexShader);
@@ -49,6 +128,12 @@ class ShaderMaterial {
     return this._vertexShaderModule;
   }
 
+  /**
+   @function getFragmentShaderModule
+   @param {Object} device - The WebGPU device.
+   @returns {Object} The fragment shader module.
+   @desc Returns the cached fragment shader module for this ShaderMaterial object. If the module has not been cached yet, it will create a new one using the provided device and fragment shader code.
+   */
   getFragmentShaderModule(device) {
     if (!this._fragmentShaderModule) {
       this._fragmentShaderModule = this.createShaderModule(device, this.fragmentShader);
@@ -56,15 +141,34 @@ class ShaderMaterial {
     return this._fragmentShaderModule;
   }
 
+  /**
+
+   @function getLayoutEntries
+   @returns {Array} An array of layout entries for this ShaderMaterial object.
+   @desc Returns an array of layout entries for this ShaderMaterial object. This should be overridden by child classes to provide specific layout entries.
+   */
   getLayoutEntries() {
     return [];
   }
 
+  /**
+   @function getBindGroup
+   @param {Object} device - The WebGPU device.
+   @param {Object} layout - The layout for the bind group.
+   @param {...*} [props] - Additional properties needed to create the bind group.
+   @returns {Object} The created bind group.
+   @desc Creates a new WebGPU bind group for this ShaderMaterial object. This should be overridden by child classes to provide specific bind group entries.
+   */
   // eslint-disable-next-line no-unused-vars
   getBindGroup(device, layout, ...props) {
     return device.createBindGroup({ layout, entries: [] });
   }
 
+  /**
+   @function getBlend
+   @returns {Object} The blend state for this ShaderMaterial object.
+   @desc Returns the blend state for this ShaderMaterial object based on the current value of the blendMode property.
+   */
   getBlend() {
     if (this.blendMode === "OPAQUE") {
       return {

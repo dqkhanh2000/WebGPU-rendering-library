@@ -16,20 +16,39 @@ import { BuiltinLight, BuiltinsUniform } from "../utils/constants.js";
 import { Color } from "../math/Color.js";
 
 const GPUTextureUsage = window.GPUTextureUsage ?? {};
+
+/**
+ * Class for handling the rendering of the scene.
+ */
 class Renderer {
-  // canvas dom
+
+  /**
+   * @param {HTMLCanvasElement} props.canvas - The canvas element for rendering
+   **/
   canvas;
 
-  // scene root
+  /**
+   * The scene to be rendered.
+   * @type {SceneNode}
+   */
   scene;
 
-  // camera
+  /**
+   * The camera used for rendering.
+   * @type {PerspectiveCamera}
+   */
   camera;
 
-  // frame controller
+  /**
+   * The frame controller for managing the rendering loop.
+   * @type {FrameController}
+   */
   controls = new FrameController(this.render.bind(this));
 
-  // cube texture
+  /**
+   * The cubemap used for rendering.
+   * @type {TextureObject}
+   */
   cubemap = new TextureObject({
     texture: {
       size   : [1, 1, 6],
@@ -43,6 +62,10 @@ class Renderer {
     },
   });
 
+  /**
+   * The lights in the scene.
+   * @type {{directionLight: Array.<DirectionLight>, pointLight: Array.<PointLight>, ambientLight: Array.<AmbientLight|Light>}}
+   */
   lights = {
     ambientLight   : new AmbientLight({ intensity: 0 }),
     directionLight : {
@@ -59,36 +82,80 @@ class Renderer {
     },
   };
 
-  // check webgpu support
+  /**
+   * The GPU instance for rendering.
+   * @type {GPUInstance}
+   */
   gpu;
 
+  /**
+   * The promise for initializing the GPU.
+   * @type {Promise<GPUInstance>}
+   */
   promise;
 
+  /**
+   * Flag for checking if the GPU is being initialized.
+   * @type {boolean}
+   */
   gpuChecking = true;
 
-  // TODO: msaa, must be 1 or 4
+  /**
+   * The number of samples to use for multisampling.
+   * @type {number}
+   */
   sampleCount = 1;
 
-  // resolution
+  /**
+   * The resolution of the presentation.
+   * @type {Vector2}
+   */
   presentationSize = new Vector2();
 
-  // texture format
+  /**
+   * The format of the presentation texture.
+   * @type
+   *  * {string}
+   */
   presentationFormat = "bgra8unorm";
 
-  // textures
+  /**
+   * The depth texture for rendering.
+   * @type {TextureObject}
+   */
   _depthTexture = new TextureObject();
 
-  // render pass configuration
+  /**
+   * The render pass descriptor for rendering.
+   * @type {GPURenderPassDescriptor}
+   */
   _renderPassDescriptor;
 
+  /**
+   * The color attachments for rendering.
+   * @type {Array.<GPURenderPassColorAttachmentDescriptor>}
+   */
   _colorAttachments;
 
-  // piplines
+  /**
+   * The cached pipelines for rendering.
+   * @type {Map<string, RenderPipeline>}
+   */
   _cachedPipline = new Map();
 
-  // hooks
+  /**
+   * The update callbacks for the renderer.
+   * @type {Array.<Function>}
+   */
   _updateCallbacks = [];
 
+  /**
+   * Creates a new renderer.
+   * @param {Object} props - The properties of the renderer.
+   * @param {HTMLCanvasElement} props.canvas - The canvas element for rendering.
+   * @param {SceneNode} [props.scene=new SceneNode()] - The scene to be rendered.
+   * @param {PerspectiveCamera} props.camera - The camera used for rendering.
+   */
   constructor(props) {
     this.canvas = props.canvas;
     this.scene = props.scene ?? new SceneNode();
@@ -107,6 +174,10 @@ class Renderer {
     });
   }
 
+  /**
+   * Adds a light to the scene.
+   * @param {DirectionLight|PointLight|AmbientLight|Light} light - The light to be added.
+   */
   addLight(light) {
     if (light instanceof DirectionLight) {
       if (!this.lights.directionLight) {
@@ -175,16 +246,27 @@ class Renderer {
     }
   }
 
+  /**
+   * Start rendering the scene.
+   * @return {Renderer} The renderer instance.
+   */
   start() {
     this.controls.start();
     return this;
   }
 
+  /**
+   * Stop rendering the scene.
+   * @return {Renderer} The renderer instance.
+   */
   stop() {
     this.controls.pause();
     return this;
   }
 
+  /**
+   * Destroys the renderer and cleans up any resources.
+   */
   destroy() {
     ShaderMaterial.clearCache();
     this.scene.destroy();
@@ -192,11 +274,19 @@ class Renderer {
     this._depthTexture?.destroy();
   }
 
+  /**
+   * Add a callback function that will be called every frame before rendering.
+   * @param {Function} callback - The callback function to be called.
+   * @return {Renderer} The renderer instance.
+   */
   onUpdate(callback) {
     this._updateCallbacks.push(callback);
     return this;
   }
 
+  /**
+   * The render loop function that updates and renders the scene.
+   */
   render() {
     // waiting for webgpu device
     if (this.gpuChecking) {
@@ -222,6 +312,11 @@ class Renderer {
     device.queue.submit([commandEncoder.finish()]);
   }
 
+  /**
+   * Recursive function for rendering a node and its children.
+   * @param {SceneNode} node - The node to be rendered.
+   * @param {GPUCommandEncoder} passEncoder - The GPU command encoder for the render pass.
+   */
   _renderNode(node, passEncoder) {
     node.updateMatrix();
     if (node instanceof Mesh) {
@@ -232,6 +327,11 @@ class Renderer {
     }
   }
 
+  /**
+   * @param {Mesh} node - The node to render
+   * @param {Object} passEncoder - The pass encoder of WebGPU
+   * Renders the given Mesh node using the given passEncoder
+  */
   _renderMesh(node, passEncoder) {
     const gpu = this.gpu;
     const { device } = gpu;
@@ -275,6 +375,11 @@ class Renderer {
     passEncoder.drawIndexed(geometry.indexCount);
   }
 
+  /**
+   * Handle Resize of the renderer
+   * @param {boolean} [force=false] - whether force resize even if the size does not change
+   * @return {boolean} - whether resize actually happened
+  */
   _handleResize(force = false) {
     const { ctx, device } = this.gpu;
     this.canvas.style.width = "100%";

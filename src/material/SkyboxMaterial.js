@@ -3,12 +3,29 @@ import vertexShader from "../shaders/skybox/vert.wgsl?raw";
 import fragmentShader from "../shaders/skybox/frag.wgsl?raw";
 import { GPUShaderStage } from "../utils/WebGPUTypes.js";
 
+/**
+ * SkyboxMaterial is a class that represents a skybox material.
+ * @extends ShaderMaterial
+ */
 class SkyboxMaterial extends ShaderMaterial {
+  /**
+   * The texture of the skybox.
+   * @type {WebGPUTexture}
+   */
   texture;
 
+  /**
+   * The bind group of the skybox material.
+   * @type {WebGPUBindGroup}
+   * @private
+   */
   // readonly cullMode: GPUCullMode = 'front';
   _bindGroup;
 
+  /**
+   * Creates an instance of SkyboxMaterial.
+   * @param {WebGPUTexture} texture - The texture of the skybox.
+   */
   constructor(texture) {
     super({
       name: "SkyboxMaterial",
@@ -18,6 +35,10 @@ class SkyboxMaterial extends ShaderMaterial {
     this.texture = texture;
   }
 
+  /**
+   * Returns the layout entries of the skybox material.
+   * @returns {Array<WebGPUBindGroupLayoutEntry>}
+   */
   getLayoutEntries() {
     return [
       {
@@ -38,6 +59,12 @@ class SkyboxMaterial extends ShaderMaterial {
     ];
   }
 
+  /**
+   * Returns the bind group of the skybox material.
+   * @param {WebGPUDevice} device - The device to create the bind group on.
+   * @param {WebGPUBindGroupLayout} layout - The layout of the bind group.
+   * @returns {WebGPUBindGroup}
+   */
   getBindGroup(device, layout) {
     if (!this._bindGroup) {
       this.texture.getSampler(device);
