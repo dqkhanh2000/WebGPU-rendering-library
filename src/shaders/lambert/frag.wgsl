@@ -12,11 +12,6 @@ struct DirectionLight {
   //intensity: f32, is the four component of color
 }
 
-// struct AmbientLight {
-//   color: vec4<f32>,
-//   // intensity: f32,
-// }
-
 struct LightInput {
 
   // rgb is color, a is intensity

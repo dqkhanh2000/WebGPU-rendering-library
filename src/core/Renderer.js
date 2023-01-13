@@ -63,6 +63,13 @@ class Renderer {
   });
 
   /**
+   * Background color for rendering.
+   * @type {Color}
+   * @default Color.WHITE
+   */
+  backgroundColor = Color.BLACK;
+
+  /**
    * The lights in the scene.
    * @type {{directionLight: Array.<DirectionLight>, pointLight: Array.<PointLight>, ambientLight: Array.<AmbientLight|Light>}}
    */
@@ -172,6 +179,9 @@ class Renderer {
       console.warn(err);
       this.stop();
     });
+    if (props.backgroundColor) {
+      this.backgroundColor = props.backgroundColor;
+    }
   }
 
   /**
@@ -401,7 +411,7 @@ class Renderer {
         view       : undefined,
         storeOp    : "store",
         loadOp     : "clear",
-        clearValue : { r: 0.1, g: 0.1, b: 0.1, a: 1.0 },
+        clearValue : { r: this.backgroundColor.glArray[0], g: this.backgroundColor.glArray[1], b: this.backgroundColor.glArray[2], a: this.backgroundColor.glArray[3] },
       }];
       // update depth texture
       this._depthTexture?.destroy();
