@@ -1,4 +1,5 @@
 import { GPUBufferUsage } from "../utils/WebGPUTypes.js";
+// eslint-disable-next-line no-unused-vars
 import { BufferAttribute } from "./bufferAttributes.js";
 import { BufferObject } from "./BufferObject.js";
 

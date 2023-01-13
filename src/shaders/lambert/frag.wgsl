@@ -59,7 +59,7 @@ fn main(
   // calculate for point light
   for(var i = 0u; i < ${POINT_LINE_LENGTH}u; i = i + 1u) {
     var pointLight = lightInput.pointLights[i];
-    var lightPosition = pointLight.position.xyz + viewPos;
+    var lightPosition = (pointLight.position.xyz + viewPos);
     var lightRadius = pointLight.position.w;
     var lightIntensity = pointLight.color.w;
     var lightColor = pointLight.color.rgb;

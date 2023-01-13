@@ -1,3 +1,7 @@
+import { DirectionLight } from "../light/DirectionLight";
+import { Light } from "../light/Light";
+import { PointLight } from "../light/PointLight";
+
 export const BuiltinsMatrix = {
   ModelMatrix: {
     name : "ModelMatrix",
@@ -12,6 +16,22 @@ export const BuiltinsMatrix = {
     size : 64,
   },
 };
+
+export const BuiltinLight = {
+
+  AmbientLight: {
+    name : "AmbientLight",
+    size : Light.BUFFER_SIZE * 4,
+  },
+  PointLight: {
+    name : "PointLight",
+    size : PointLight.BUFFER_SIZE * 4,
+  },
+  DirectionLight: {
+    name : "DirectionLight",
+    size : DirectionLight.BUFFER_SIZE * 4,
+  },
+};
 export const BuiltinsUniform = {
   TransformUniform: {
     binding : 1,
@@ -20,6 +40,15 @@ export const BuiltinsUniform = {
       BuiltinsMatrix.ModelMatrix,
       BuiltinsMatrix.ModelViewMatrix,
       BuiltinsMatrix.NormalMatrix,
+    ],
+  },
+  LightUniform: {
+    binding : 1,
+    name    : "LightUniform",
+    items   : [
+      BuiltinLight.AmbientLight,
+      BuiltinLight.PointLight,
+      BuiltinLight.DirectionLight,
     ],
   },
 };

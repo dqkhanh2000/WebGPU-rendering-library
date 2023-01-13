@@ -40,11 +40,9 @@ fn main(
     var output : VertexOutput;
     output.Position = mvp * pos;
     output.fragPosition = (modelview * pos).xyz;
-    // it should use transpose(inverse(modelview)) if consider non-uniform scale
-    // hint: inverse() is not available in wgsl, better do in JS or CS
     output.fragNormal =  (modelview * vec4<f32>(normal, 0.0)).xyz;
     output.fragUV = uv;
     output.fragColor = color;
-    output.viewPos = camera.ViewMatrix[3].xyz;
+    output.viewPos = (camera.ViewMatrix * vec4<f32>(0.0, 0.0, 0.0, 1.0)).xyz;
     return output;
 }
