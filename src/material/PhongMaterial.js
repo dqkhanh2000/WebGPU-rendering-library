@@ -15,12 +15,59 @@ import { UniformBuffer } from "../buffer/UniformBuffer";
  * @extends ShaderMaterial
  */
 export class PhongMaterial extends ShaderMaterial {
+
   /**
-   * The albedo color of the material
+   * The ambientIntensity of the material
+   * @type {number}
+   * @default 0
+   * @range [0, 1]
+   */
+  ambientIntensity;
+
+  /**
+   * The ambientColor of the material
    * @type {Color}
    * @default Color.WHITE
    */
-  albedo;
+  ambientColor;
+
+  /**
+   * The specular color of the material
+   * @type {Color}
+   * @default Color.WHITE
+   */
+  specularColor;
+
+  /**
+   * The specular reflection of the material
+   * @type {number}
+   * @default 0
+   * @range [0, 1]
+   */
+  specularReflection;
+
+  /**
+   * The diffuse color of the material
+   * @type {Color}
+   * @default Color.WHITE
+   */
+  diffuseColor;
+
+  /**
+   * The diffuse reflection of the material
+   * @type {number}
+   * @default 1
+   * @range [0, 1]
+   */
+  diffuseReflection;
+
+  /**
+   * The shininess of the material
+   * @type {number}
+   * @default 0
+   * @range [0, 100]
+   */
+  shininess;
 
   /**
    * The albedoMap of the material

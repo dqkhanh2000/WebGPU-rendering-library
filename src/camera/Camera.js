@@ -71,7 +71,7 @@ class Camera {
 
   /**
    * Create a new Camera object
-   * @param {Object} props 
+   * @param {Object} props
    * @param {Vector3} props.position - the position of the camera
    * @param {Vector3} [props.lookAt=Vector3.ZERO] - the point the camera is looking at
    * @param {Vector3} [props.up=Vector3.UP] - the up vector for the camera

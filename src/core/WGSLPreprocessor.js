@@ -56,7 +56,7 @@ export default class WGSLPreProcess {
     let continueLineIndex = startIndex;
     while (continueLineIndex < lines.length) {
       let line = lines[continueLineIndex];
-      directiveBlock += line + "\n";
+      directiveBlock += `${line }\n`;
       continueLineIndex++;
       if (line.startsWith("#endif")) {
         break;
@@ -65,7 +65,7 @@ export default class WGSLPreProcess {
     return { directiveBlock, continueLineIndex };
   }
 
-   /**
+  /**
    * Processes the directive block by removing the commented out code
    * @param {string} directiveBlock - The directive block from the WGSL source code
    * @param {Array} inputDirectives - An array of input directives
