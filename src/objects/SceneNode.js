@@ -149,9 +149,11 @@ class SceneNode {
     const modelMatrix = this.worldMatrix;
     const modelViewMatrix = camera.viewMatrix.clone().multiply(modelMatrix);
     const normalViewMatrix = new Matrix3().fromMatrix4(modelViewMatrix);
+    const inverseModelViewMatrix = modelViewMatrix.clone().invert().transpose();
     this.uniform.set(device, BuiltinsMatrix.ModelMatrix.name, modelMatrix.elements.buffer);
     this.uniform.set(device, BuiltinsMatrix.ModelViewMatrix.name, modelViewMatrix.elements.buffer);
     this.uniform.set(device, BuiltinsMatrix.NormalMatrix.name, normalViewMatrix.elements.buffer);
+    this.uniform.set(device, BuiltinsMatrix.InverseModelViewMatrix.name, inverseModelViewMatrix.elements.buffer);
   }
 }
 

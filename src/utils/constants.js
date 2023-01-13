@@ -15,6 +15,10 @@ export const BuiltinsMatrix = {
     name : "NormalMatrix",
     size : 64,
   },
+  InverseModelViewMatrix: {
+    name : "InverseModelViewMatrix",
+    size : 64,
+  },
 };
 
 export const BuiltinLight = {
@@ -40,6 +44,7 @@ export const BuiltinsUniform = {
       BuiltinsMatrix.ModelMatrix,
       BuiltinsMatrix.ModelViewMatrix,
       BuiltinsMatrix.NormalMatrix,
+      BuiltinsMatrix.InverseModelViewMatrix,
     ],
   },
   LightUniform: {

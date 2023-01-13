@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Render cube</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            color: #fff;
+            display: flex;
+            text-align: center;
+            flex-direction: column;
+            justify-content: center;
+        }
+        p{
+            font-size: 14px;
+            margin:0
+        }
+        canvas {
+            width: 100%;
+            height: 100%; 
+        }
+    </style>
+</head>
+<body>
+    <canvas></canvas>
+    <script type="module">
+      import KaneRender from '../src/index.js';
+      import * as dat from "dat.gui";
+
+      const canvas = document.querySelector("canvas");
+
+      const camera = new KaneRender.PerspectiveCamera({
+        position: new KaneRender.Vector3(1, 0, 5),
+        fov: 60
+      });
+
+      const renderer = new KaneRender.Renderer({ canvas, camera, backgroundColor: KaneRender.Color.GRAY });
+      const controls = new KaneRender.OrbitControl(camera, canvas);
+      let directionLight = new KaneRender.DirectionLight({
+        direction: new KaneRender.Vector3(-1, -0.1, -1),
+        intensity: 0.8,
+        color: KaneRender.Color.WHITE
+      });
+      renderer.addLight(directionLight);
+
+      renderer.onUpdate(() => {
+        controls.update();
+      });
+
+      let gui = new dat.GUI();
+
+      let colors = {
+        ambient: new KaneRender.Color(200, 100, 0),
+        diffuse: new KaneRender.Color(200, 100, 0), 
+        specular: KaneRender.Color.WHITE,
+        lightColor: KaneRender.Color.WHITE
+      };
+      let phongMaterial = new KaneRender.PhongMaterial({
+          shininess: 80,
+          ambientColor: colors.ambient,
+          diffuseColor: colors.diffuse, 
+          specularColor: colors.specular,
+          ambientIntensity: 0.5,
+          diffuseReflection: 1,
+          specularReflection: 1,
+        })
+
+      let matControl = gui.addFolder("Material")
+      matControl.add(phongMaterial, 'shininess', 0, 100, 1);
+      matControl.add(phongMaterial, "ambientIntensity", 0, 1, 0.01, 1);
+      matControl.addColor(colors, "ambient").onChange((color) => {
+        phongMaterial.ambientColor.r = color.r;
+        phongMaterial.ambientColor.g = color.g;
+        phongMaterial.ambientColor.b = color.b;
+      });
+      matControl.add(phongMaterial, "specularReflection", 0, 1, 0.01, 1);
+      matControl.addColor(colors, "specular").onChange((color) => {
+        phongMaterial.specularColor.r = color.r;
+        phongMaterial.specularColor.g = color.g;
+        phongMaterial.specularColor.b = color.b;
+      });
+      matControl.add(phongMaterial, "diffuseReflection", 0, 1, 0.01, 1);
+      matControl.addColor(colors, "diffuse").onChange((color) => {
+        phongMaterial.diffuseColor.r = color.r;
+        phongMaterial.diffuseColor.g = color.g;
+        phongMaterial.diffuseColor.b = color.b;
+      });
+      matControl.open()
+
+      let lightControl = gui.addFolder("Light");
+      lightControl.add(directionLight.direction, "x", -1, 1, 0.01, 1)
+      lightControl.add(directionLight.direction, "y", -1, 1, 0.01, 1)
+      lightControl.add(directionLight.direction, "z", -1, 1, 0.01, 1)
+      lightControl.add(directionLight, "intensity", 0, 1, 0.01, 1)
+      lightControl.addColor(colors, "lightColor").onChange((color) => {
+        directionLight.color.r = color.r;
+        directionLight.color.g = color.g;
+        directionLight.color.b = color.b;
+      });
+      lightControl.open();
+      
+      let sphere = new KaneRender.Mesh({
+        geometry: new KaneRender.SphereGeometry(),
+        material: phongMaterial,
+      });
+      sphere.scale.set(0.8, 0.8, 0.8)
+      sphere.position.x = -2;
+      sphere.position.z = -2;
+      renderer.scene.add(sphere);
+
+      let cube = new KaneRender.Mesh({
+        geometry: new KaneRender.BoxGeometry(),
+        material: phongMaterial,
+      });
+      cube.position.x = 2;
+      cube.position.z = -2;
+      renderer.scene.add(cube);
+      renderer.start();
+    </script>
+</body>
+</html>

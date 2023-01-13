@@ -79,14 +79,14 @@
       renderer.scene.add(pointLightMesh);
 
       let materials = [
-        new KaneRender.LambertMaterial({ albedo: KaneRender.Color.RED}),
-        new KaneRender.LambertMaterial({ albedo: KaneRender.Color.GREEN}),
-        new KaneRender.LambertMaterial({ albedo: KaneRender.Color.BLUE}),
-        new KaneRender.LambertMaterial({ albedo: KaneRender.Color.YELLOW}),
-        new KaneRender.LambertMaterial({ albedo: KaneRender.Color.PURPLE}),
-        new KaneRender.LambertMaterial({ albedo: KaneRender.Color.MAGENTA}),
-        new KaneRender.LambertMaterial({ albedo: KaneRender.Color.CYAN}),
-        new KaneRender.LambertMaterial({ albedo: KaneRender.Color.GRAY}),
+        new KaneRender.PhongMaterial({ diffuseColor: KaneRender.Color.RED}),
+        new KaneRender.PhongMaterial({ diffuseColor: KaneRender.Color.GREEN}),
+        new KaneRender.PhongMaterial({ diffuseColor: KaneRender.Color.BLUE}),
+        new KaneRender.PhongMaterial({ diffuseColor: KaneRender.Color.YELLOW}),
+        new KaneRender.PhongMaterial({ diffuseColor: KaneRender.Color.PURPLE}),
+        new KaneRender.PhongMaterial({ diffuseColor: KaneRender.Color.MAGENTA}),
+        new KaneRender.PhongMaterial({ diffuseColor: KaneRender.Color.CYAN}),
+        new KaneRender.PhongMaterial({ diffuseColor: KaneRender.Color.GRAY}),
       ];
 
       let geometries = [

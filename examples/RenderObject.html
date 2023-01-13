@@ -65,7 +65,7 @@
       let materials = {
         normal: new KaneRender.NormalMaterial(),
         wireframe: new KaneRender.WireFrameMaterial(),
-        lambert: new KaneRender.LambertMaterial({
+        Phong: new KaneRender.PhongMaterial({
           color: KaneRender.Color.RED
         }),
         type: "normal"
@@ -81,7 +81,7 @@
       f2.add(directionLight.direction, "y", -1, 1);
       f2.add(directionLight.direction, "z", -1, 1);
       gui.addFolder("Material");
-      gui.add(materials, "type", ["normal", "wireframe", "lambert", "default"]).onChange((type) => {
+      gui.add(materials, "type", ["normal", "wireframe", "Phong", "default"]).onChange((type) => {
         switch (type) {
           case "normal":
             selectMaterial = materials.normal;
@@ -89,8 +89,8 @@
           case "wireframe":
             selectMaterial = materials.wireframe;
             break;
-          case "lambert":
-            selectMaterial = materials.lambert;
+          case "Phong":
+            selectMaterial = materials.Phong;
             break;
           case "default":
             selectMaterial = null;

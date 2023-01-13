@@ -7,6 +7,7 @@ struct TransformUniform {
   ModelMatrix: mat4x4<f32>,
   ModelViewMatrix: mat4x4<f32>,
   NormalMatrix: mat4x4<f32>,
+  InverseModelViewMatrix: mat4x4<f32>,
 };
 
 @group(0)
@@ -41,7 +42,7 @@ fn main(
     output.Position = mvp * pos;
     output.fragPosition = (modelview * pos).xyz;
     output.fragNormal =  (modelview * vec4<f32>(normal, 0.0)).xyz;
-    output.fragUV = uv;
+    output.fragUV = 1-uv;
     output.fragColor = color;
     output.viewPos = (camera.ViewMatrix * vec4<f32>(0.0, 0.0, 0.0, 1.0)).xyz;
     return output;

@@ -34,7 +34,7 @@ export class BufferAttribute {
      */
     this.format = "float32x4";
 
-    
+
     this.offset = offset;
     this.size = size;
     this.format = format;

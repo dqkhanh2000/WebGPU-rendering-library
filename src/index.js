@@ -32,7 +32,7 @@ import { ShaderMaterial } from "./material/ShaderMaterial.js";
 import { NormalMaterial } from "./material/NormalMaterial.js";
 import { PhysicalMaterial } from "./material/PhysicalMaterial.js";
 import { SkyboxMaterial } from "./material/SkyboxMaterial.js";
-import { LambertMaterial } from "./material/LambertMaterial.js";
+import { PhongMaterial } from "./material/PhongMaterial.js";
 import { WireFrameMaterial } from "./material/WireFrameMaterial.js";
 import { uuid } from "./utils/uuid.js";
 import { GLTFLoader } from "./loaders/GLTFLoader.js";
@@ -74,7 +74,7 @@ const KaneRender = {
   NormalMaterial,
   PhysicalMaterial,
   SkyboxMaterial,
-  LambertMaterial,
+  PhongMaterial,
   WireFrameMaterial,
   uuid,
   GLTFLoader,

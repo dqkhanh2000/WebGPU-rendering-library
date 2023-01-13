@@ -56,7 +56,7 @@ export default class WGSLPreProcess {
     let continueLineIndex = startIndex;
     while (continueLineIndex < lines.length) {
       let line = lines[continueLineIndex];
-      directiveBlock += line;
+      directiveBlock += line + "\n";
       continueLineIndex++;
       if (line.startsWith("#endif")) {
         break;
@@ -85,7 +85,7 @@ export default class WGSLPreProcess {
             if (nextLine.startsWith("#endif")) {
               break;
             }
-            processedDirectiveBlock += `${nextLine }\n`;
+            processedDirectiveBlock += `${nextLine}\n`;
             i++;
           }
         }
