@@ -3,7 +3,14 @@
   "version": "1.0.0",
   "description": "The 3D render engine using WebGPU in javascript",
   "type": "module",
-  "main": "index.js",
+  "main": "./kane-render.umd.cjs",
+  "module": "./kane-render.js",
+  "exports" : {
+    ".": {
+      "import": "./kane-render.js",
+      "require": "./kane-render.umd.cjs"
+    }
+  },
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
