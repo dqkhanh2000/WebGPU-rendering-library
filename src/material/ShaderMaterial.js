@@ -55,15 +55,15 @@ class ShaderMaterial {
   _vertexShaderModule;
 
   /**
-    * The fragment shader module 
-    * @type {WebGPUShaderModule}
-    */
+     * The fragment shader module
+     * @type {WebGPUShaderModule}
+     */
   _fragmentShaderModule;
 
   /**
-    * A cache for storing shader modules
-    * @type {Map<string, WebGPUShaderModule>}
-    */
+     * A cache for storing shader modules
+     * @type {Map<string, WebGPUShaderModule>}
+     */
   static _cachedShader = new Map();
 
   /**
@@ -91,8 +91,7 @@ class ShaderMaterial {
   }
 
   /**
-   @function destroy
-   @desc Clears the cached vertex and fragment shader modules from this ShaderMaterial object.
+    @desc Clears the cached vertex and fragment shader modules from this ShaderMaterial object.
    */
   destroy() {
     this._vertexShaderModule = undefined;
@@ -100,11 +99,10 @@ class ShaderMaterial {
   }
 
   /**
-   @function createShaderModule
-   @param {Object} device - The WebGPU device.
-   @param {String} code - The code for the shader module.
-   @returns {Object} The created shader module.
-   @desc Creates a new WebGPU shader module and caches it for future use.
+    Creates a new WebGPU shader module and caches it for future use.
+    @param {Object} device - The WebGPU device.
+    @param {String} code - The code for the shader module.
+    @returns {WebGPUShaderModule} The shader module.
    */
   createShaderModule(device, code) {
     let shaderModule = ShaderMaterial._cachedShader.get(code);
@@ -116,56 +114,56 @@ class ShaderMaterial {
   }
 
   /**
-   @function getVertexShaderModule
-   @param {Object} device - The WebGPU device.
-   @returns {Object} The vertex shader module.
-   @desc Returns the cached vertex shader module for this ShaderMaterial object. If the module has not been cached yet, it will create a new one using the provided device and vertex shader code.
-   */
+    Returns the cached vertex shader module for this ShaderMaterial object. If the module has not been cached yet, it will create a new one using the provided device and vertex shader code.
+    @param {Object} device - The WebGPU device.
+    @returns {WebGPUShaderModule} The vertex shader module.
+  */
   getVertexShaderModule(device) {
     if (!this._vertexShaderModule) {
-      this._vertexShaderModule = this.createShaderModule(device, this.vertexShader);
+      this._vertexShaderModule = this.createShaderModule(
+        device,
+        this.vertexShader,
+      );
     }
     return this._vertexShaderModule;
   }
 
   /**
-   @function getFragmentShaderModule
-   @param {Object} device - The WebGPU device.
-   @returns {Object} The fragment shader module.
-   @desc Returns the cached fragment shader module for this ShaderMaterial object. If the module has not been cached yet, it will create a new one using the provided device and fragment shader code.
+    Returns the cached fragment shader module for this ShaderMaterial object. If the module has not been cached yet, it will create a new one using the provided device and fragment shader code.
+    @param {Object} device - The WebGPU device.
+    @returns {WebGPUShaderModule} The fragment shader module.
    */
   getFragmentShaderModule(device) {
     if (!this._fragmentShaderModule) {
-      this._fragmentShaderModule = this.createShaderModule(device, this.fragmentShader);
+      this._fragmentShaderModule = this.createShaderModule(
+        device,
+        this.fragmentShader,
+      );
     }
     return this._fragmentShaderModule;
   }
 
   /**
-
-   @function getLayoutEntries
-   @returns {Array} An array of layout entries for this ShaderMaterial object.
-   @desc Returns an array of layout entries for this ShaderMaterial object. This should be overridden by child classes to provide specific layout entries.
-   */
+    Returns an array of layout entries for this ShaderMaterial object. This should be overridden by child classes to provide specific layout entries.
+    @returns {Array} An array of layout entries for this ShaderMaterial object.
+  */
   getLayoutEntries() {
     return [];
   }
 
   /**
-   @function getBindGroup
-   @param {Object} device - The WebGPU device.
-   @param {Object} layout - The layout for the bind group.
-   @param {...*} [props] - Additional properties needed to create the bind group.
-   @returns {Object} The created bind group.
-   @desc Creates a new WebGPU bind group for this ShaderMaterial object. This should be overridden by child classes to provide specific bind group entries.
-   */
+     Creates a new WebGPU bind group for this ShaderMaterial object. This should be overridden by child classes to provide specific bind group entries.
+    @param {Object} device - The WebGPU device.
+    @param {Object} layout - The layout for the bind group.
+    @param {...*} [props] - Additional properties needed to create the bind group.
+    @returns {Object} The created bind group.
+ */
   // eslint-disable-next-line no-unused-vars
   getBindGroup(device, layout, ...props) {
     return device.createBindGroup({ layout, entries: [] });
   }
 
   /**
-   @function getBlend
    @returns {Object} The blend state for this ShaderMaterial object.
    @desc Returns the blend state for this ShaderMaterial object based on the current value of the blendMode property.
    */
@@ -252,18 +250,17 @@ class ShaderMaterial {
         },
       };
     }
-
   }
 
   /**
-   * Attach light to material
-   * @param {object} lights - The lights to attach
-   * @param {object} lights.directionLight - The direction light
-   * @param {array<DirectionLight>} lights.directionLight.lights - The list of direction lights
-   * @param {object} lights.pointLight - The point light
-   * @param {array<PointLight>} lights.pointLight.lights - The list of point lights
-   * @param {object} lights.ambientLight - The ambient light
-   */
+     * Attach light to material
+     * @param {object} lights - The lights to attach
+     * @param {object} lights.directionLight - The direction light
+     * @param {array<DirectionLight>} lights.directionLight.lights - The list of direction lights
+     * @param {object} lights.pointLight - The point light
+     * @param {array<PointLight>} lights.pointLight.lights - The list of point lights
+     * @param {object} lights.ambientLight - The ambient light
+     */
   attachLight(lights) {
     this.lights = lights;
   }

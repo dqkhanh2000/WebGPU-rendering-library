@@ -7,7 +7,6 @@ import { Light } from "./Light";
  @extends Light
  */
 export class PointLight extends Light {
-
   static BUFFER_SIZE = Light.BUFFER_SIZE + 3 + 1; // size of intensity + color + position + radius
 
   /**
@@ -26,13 +25,17 @@ export class PointLight extends Light {
    @param {number} [options.radius=10] - The radius of the light.
    @param {Color} [options.color=new Color(1, 1, 1)] - The color of the light.
    */
- 
-  constructor({ position = Vector3.ZERO, intensity = 1, radius = 10, color = Color.WHITE } = {}) {
+
+  constructor({
+    position = Vector3.ZERO,
+    intensity = 1,
+    radius = 10,
+    color = Color.WHITE,
+  } = {}) {
     super({ intensity, color });
     this.position = position;
     this.radius = radius;
   }
-
 
   getBuffer() {
     if (!this._buffer) {

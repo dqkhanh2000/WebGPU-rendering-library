@@ -1,10 +1,13 @@
 // eslint-disable-next-line no-unused-vars
 import { Vector2 } from "./Vector2";
 
+/**
+ * A 3x3 matrix.
+ * @class
+ */
 export class Matrix3 {
   /**
    * Creates a new Matrix3 instance.
-   *
    * @param {number} [m00=1] - The value for the first row and first column.
    * @param {number} [m01=0] - The value for the first row and second column.
    * @param {number} [m02=0] - The value for the first row and third column.

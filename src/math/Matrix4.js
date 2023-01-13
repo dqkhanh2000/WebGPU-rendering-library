@@ -3,10 +3,13 @@ import { EPSILON } from "./Math";
 import { Matrix3 } from "./Matrix3";
 import { Vector3 } from "./Vector3";
 
+/**
+ * A 4x4 matrix.
+ * @class
+ */
 export class Matrix4 extends Matrix3 {
   /**
    * Creates a new Matrix4 instance.
-   *
    * @param {number} [m00=1] - The value for the first row and first column.
    * @param {number} [m01=0] - The value for the first row and second column.
    * @param {number} [m02=0] - The value for the first row and third column.
@@ -853,7 +856,6 @@ export class Matrix4 extends Matrix3 {
    * rotateY(angle);
    * @param {Number} rad The angle to rotate around the Y axis in radians
    * @returns {Matrix4} This matrix.
-   * @function
    */
   fromYRotation(rad) {
     const s = Math.sin(rad);

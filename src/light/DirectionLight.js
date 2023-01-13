@@ -9,6 +9,7 @@ import { Light } from "./Light";
 export class DirectionLight extends Light {
 
   static BUFFER_SIZE = Light.BUFFER_SIZE + 3 + 1;// size of intensity + color + direction + 1 is for padding
+
   /**
    The direction of the light.
    @type {Vector3}

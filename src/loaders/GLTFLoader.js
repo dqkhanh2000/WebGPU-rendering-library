@@ -39,7 +39,8 @@ class GLTFLoader extends BaseLoader {
    @param {string} url - The URL of the GLTF file to load.
    @returns {Promise<SceneNode>} A promise that resolves to the root node of the GLTF scene.
    */
-  async loadAsync(url) {
+  async loadAsync(url, options = {}) {
+    this.options = options;
     const doc = await io.read(url);
     const root = doc.getRoot();
     const scene = root.listScenes()[0];
@@ -139,50 +140,55 @@ class GLTFLoader extends BaseLoader {
    @returns {PhysicalMaterial} The parsed material.
    */
   parseMaterial(_mesh) {
-    const primitive = _mesh.listPrimitives()[0];
-    const _mat = primitive.getMaterial();
-    let baseColorTexture = DefaultTexture;
-    let normalTexture = DefaultTexture;
-    let metallicRoughnessTexture = DefaultTexture;
-    let emissiveTexture = DefaultTexture;
-    let aoTexture = DefaultTexture;
-    let blendMode = _mat.getAlphaMode();
-    const updateTextureInfo = (texture, info) => {
-      texture?.updateDescriptor({
-        sampler: {
-          addressModeU : GLTFWrapModeMapper[info.getWrapS()],
-          addressModeV : GLTFWrapModeMapper[info.getWrapT()],
-        },
+    if (this.options.material) {
+      return this.options.material;
+    }
+    else {
+      const primitive = _mesh.listPrimitives()[0];
+      const _mat = primitive.getMaterial();
+      let baseColorTexture = DefaultTexture;
+      let normalTexture = DefaultTexture;
+      let metallicRoughnessTexture = DefaultTexture;
+      let emissiveTexture = DefaultTexture;
+      let aoTexture = DefaultTexture;
+      let blendMode = _mat.getAlphaMode();
+      const updateTextureInfo = (texture, info) => {
+        texture?.updateDescriptor({
+          sampler: {
+            addressModeU : GLTFWrapModeMapper[info.getWrapS()],
+            addressModeV : GLTFWrapModeMapper[info.getWrapT()],
+          },
+        });
+      };
+      if (_mat.getBaseColorTexture()) {
+        baseColorTexture = this._cachedTextures.get(_mat.getBaseColorTexture());
+        updateTextureInfo(baseColorTexture, _mat.getBaseColorTextureInfo());
+      }
+      if (_mat.getNormalTexture()) {
+        normalTexture = this._cachedTextures.get(_mat.getNormalTexture());
+        updateTextureInfo(normalTexture, _mat.getNormalTextureInfo());
+      }
+      if (_mat.getMetallicRoughnessTexture()) {
+        metallicRoughnessTexture = this._cachedTextures.get(_mat.getMetallicRoughnessTexture());
+        updateTextureInfo(metallicRoughnessTexture, _mat.getMetallicRoughnessTextureInfo());
+      }
+      if (_mat.getEmissiveTexture()) {
+        emissiveTexture = this._cachedTextures.get(_mat.getEmissiveTexture());
+        updateTextureInfo(emissiveTexture, _mat.getEmissiveTextureInfo());
+      }
+      if (_mat.getOcclusionTexture()) {
+        aoTexture = this._cachedTextures.get(_mat.getOcclusionTexture());
+        updateTextureInfo(aoTexture, _mat.getOcclusionTextureInfo());
+      }
+      return new PhysicalMaterial({
+        baseColorTexture,
+        normalTexture,
+        metallicRoughnessTexture,
+        emissiveTexture,
+        aoTexture,
+        blendMode,
       });
-    };
-    if (_mat.getBaseColorTexture()) {
-      baseColorTexture = this._cachedTextures.get(_mat.getBaseColorTexture());
-      updateTextureInfo(baseColorTexture, _mat.getBaseColorTextureInfo());
     }
-    if (_mat.getNormalTexture()) {
-      normalTexture = this._cachedTextures.get(_mat.getNormalTexture());
-      updateTextureInfo(normalTexture, _mat.getNormalTextureInfo());
-    }
-    if (_mat.getMetallicRoughnessTexture()) {
-      metallicRoughnessTexture = this._cachedTextures.get(_mat.getMetallicRoughnessTexture());
-      updateTextureInfo(metallicRoughnessTexture, _mat.getMetallicRoughnessTextureInfo());
-    }
-    if (_mat.getEmissiveTexture()) {
-      emissiveTexture = this._cachedTextures.get(_mat.getEmissiveTexture());
-      updateTextureInfo(emissiveTexture, _mat.getEmissiveTextureInfo());
-    }
-    if (_mat.getOcclusionTexture()) {
-      aoTexture = this._cachedTextures.get(_mat.getOcclusionTexture());
-      updateTextureInfo(aoTexture, _mat.getOcclusionTextureInfo());
-    }
-    return new PhysicalMaterial({
-      baseColorTexture,
-      normalTexture,
-      metallicRoughnessTexture,
-      emissiveTexture,
-      aoTexture,
-      blendMode,
-    });
   }
 }
 

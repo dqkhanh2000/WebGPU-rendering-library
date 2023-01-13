@@ -1,9 +1,9 @@
 /* eslint-disable max-depth */
 /* eslint-disable camelcase */
-import { Color } from "../../math/Color.js";
 import { Path } from "./Path.js";
 import { Shape } from "./Shape.js";
 import { ShapeUtils } from "../ShapeUtils.js";
+import { Color } from "../../../math/Color.js";
 
 class ShapePath {
   constructor() {

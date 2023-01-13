@@ -6,13 +6,13 @@ import { Color } from "../math/Color";
  */
 export class Light {
 
- static BUFFER_SIZE = 1 + 3; // size of intensity + color: 4 element
+  static BUFFER_SIZE = 1 + 3; // size of intensity + color: 4 element
 
   /**
    The intensity of the light.
    @type {number}
    @default 1
-   */ 
+   */
   intensity;
 
   /**

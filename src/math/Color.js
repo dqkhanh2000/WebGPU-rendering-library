@@ -274,9 +274,6 @@ export class Color {
 
   /**
      * Set this color to the specified value.
-     * @name setColor
-     * @memberof Color
-     * @function
      * @param {number} r red component [0 .. 255]
      * @param {number} g green component [0 .. 255]
      * @param {number} b blue component [0 .. 255]
@@ -295,7 +292,6 @@ export class Color {
      * Create a new copy of this color object.
      * @name clone
      * @memberof Color
-     * @function
      * @returns {Color} Reference to the newly cloned object
      */
   clone() {
@@ -306,7 +302,6 @@ export class Color {
      * Copy a color object or CSS color into this one.
      * @name copy
      * @memberof Color
-     * @function
      * @param {Color|string} color
      * @returns {Color} Reference to this object for method chaining
      */
@@ -323,7 +318,6 @@ export class Color {
      * Blend this color with the given one using addition.
      * @name add
      * @memberof Color
-     * @function
      * @param {Color} color
      * @returns {Color} Reference to this object for method chaining
      */
@@ -340,7 +334,6 @@ export class Color {
      * Darken this color value by 0..1
      * @name darken
      * @memberof Color
-     * @function
      * @param {number} scale
      * @returns {Color} Reference to this object for method chaining
      */
@@ -357,7 +350,7 @@ export class Color {
      * Linearly interpolate between this color and the given one.
      * @name lerp
      * @memberof Color
-     * @function
+
      * @param {Color} color
      * @param {number} alpha with alpha = 0 being this color, and alpha = 1 being the given one.
      * @returns {Color} Reference to this object for method chaining
@@ -375,7 +368,7 @@ export class Color {
      * Lighten this color value by 0..1
      * @name lighten
      * @memberof Color
-     * @function
+
      * @param {number} scale
      * @returns {Color} Reference to this object for method chaining
      */
@@ -392,7 +385,7 @@ export class Color {
      * Generate random r,g,b values for this color object
      * @name random
      * @memberof Color
-     * @function
+
      * @param {number} [min=0] minimum value for the random range
      * @param {number} [max=255] maxmium value for the random range
      * @returns {Color} Reference to this object for method chaining
@@ -418,7 +411,7 @@ export class Color {
      * given one.
      * @name equals
      * @memberof Color
-     * @function
+
      * @param {Color} color
      * @returns {boolean}
      */
@@ -436,7 +429,7 @@ export class Color {
      * r,g,b values
      * @name parseCSS
      * @memberof Color
-     * @function
+
      * @param {string} cssColor
      * @returns {Color} Reference to this object for method chaining
      */
@@ -454,7 +447,7 @@ export class Color {
      * Parse an RGB or RGBA CSS color string
      * @name parseRGB
      * @memberof Color
-     * @function
+
      * @param {string} rgbColor
      * @returns {Color} Reference to this object for method chaining
      */
@@ -474,7 +467,7 @@ export class Color {
      * the corresponding r,g,b,a values
      * @name parseHex
      * @memberof Color
-     * @function
+
      * @param {string} hexColor
      * @param {boolean} [argb = false] true if format is #ARGB, or #AARRGGBB (as opposed to #RGBA or #RGGBBAA)
      * @returns {Color} Reference to this object for method chaining
@@ -534,7 +527,7 @@ export class Color {
      * Pack this color into a Uint32 ARGB representation
      * @name toUint32
      * @memberof Color
-     * @function
+
      * @param {number} [alpha=1.0] alpha value [0.0 .. 1.0]
      * @returns {number}
      */
@@ -551,7 +544,7 @@ export class Color {
      * return an array representation of this object
      * @name toArray
      * @memberof Color
-     * @function
+
      * @returns {Float32Array}
      */
   toArray() {
@@ -561,7 +554,7 @@ export class Color {
   /**
      * return an array representation of this object
      * @memberof Color
-     * @function
+
      * @returns {Float32Array}
      */
   get array() {
@@ -573,7 +566,7 @@ export class Color {
      * Get the color in "#RRGGBB" format
      * @name toHex
      * @memberof Color
-     * @function
+
      * @returns {string}
      */
   toHex() {
@@ -587,7 +580,7 @@ export class Color {
      * Get the color in "#RRGGBBAA" format
      * @name toHex8
      * @memberof Color
-     * @function
+
      * @returns {string}
      */
   toHex8() {
@@ -601,7 +594,7 @@ export class Color {
      * Get the color in "rgb(R,G,B)" format
      * @name toRGB
      * @memberof Color
-     * @function
+
      * @returns {string}
      */
   toRGB() {
@@ -619,7 +612,7 @@ export class Color {
      * Get the color in "rgba(R,G,B,A)" format
      * @name toRGBA
      * @memberof Color
-     * @function
+
      * @returns {string}
      */
   toRGBA() {

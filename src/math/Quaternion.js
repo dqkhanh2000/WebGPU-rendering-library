@@ -3,9 +3,14 @@ import { Vector3 } from "./Vector3";
 import { Vector4 } from "./Vector4";
 // eslint-disable-next-line no-unused-vars
 
+/**
+ * A quaternion
+ * @extends Vector4
+ */
 export class Quaternion extends Vector4 {
 
   /**
+   * Creates a new quaternion
    * @param {number} [x=0] the x component
    * @param {number} [y=0] the y component
    * @param {number} [z=0] the z component
