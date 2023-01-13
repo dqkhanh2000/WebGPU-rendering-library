@@ -1,4 +1,4 @@
-# KaneRenderer WebGPU Rendering Library
+# KaneRenderer - WebGPU Rendering Library
 
 Welcome to the WebGPU Rendering Library! This library is a collection of tools and functions for creating high-performance GPU-accelerated graphics using the WebGPU API.
 
@@ -17,7 +17,7 @@ This will start a development server and open the library in your browser. You c
 
 The library exports a set of classes and functions for creating and manipulating WebGPU resources such as buffers, textures, and shaders. To use the library in your own project, you can import it as follows:
 
-```
+```jsx
 import KaneRenderer from 'kane-renderer';
 
 const canvas = document.querySelector("canvas");
