@@ -30,78 +30,78 @@
 <body>
     <canvas></canvas>
     <script type="module">
-      import * as WebGPULibrary from "../src/index.js";
+      import KaneRender from "../src/index.js";
 
       const canvas = document.querySelector("canvas");
 
-      const camera = new WebGPULibrary.PerspectiveCamera({
-        position: new WebGPULibrary.Vector3(60, 0, 60),
-        lookAt: new WebGPULibrary.Vector3(0, 0, 0),
+      const camera = new KaneRender.PerspectiveCamera({
+        position: new KaneRender.Vector3(60, 0, 60),
+        lookAt: new KaneRender.Vector3(0, 0, 0),
         fov: 60
       });
-      const renderer = new WebGPULibrary.Renderer({ canvas, camera });
-      const controls = new WebGPULibrary.OrbitControl(camera, canvas);
+      const renderer = new KaneRender.Renderer({ canvas, camera });
+      const controls = new KaneRender.OrbitControl(camera, canvas);
 
       renderer.onUpdate(() => {
         controls.update();
       });
 
-      let ambientLight = new WebGPULibrary.AmbientLight({ intensity: 0.2, color: WebGPULibrary.Color.WHITE });
+      let ambientLight = new KaneRender.AmbientLight({ intensity: 0.2, color: KaneRender.Color.WHITE });
       renderer.addLight(ambientLight);
 
-      let directionLight = new WebGPULibrary.DirectionLight({
-        direction: new WebGPULibrary.Vector3(0, 1, 0),
+      let directionLight = new KaneRender.DirectionLight({
+        direction: new KaneRender.Vector3(0, 1, 0),
         intensity: 0.3,
-        color: WebGPULibrary.Color.WHITE
+        color: KaneRender.Color.WHITE
       });
       renderer.addLight(directionLight);
-      let directionLightMesh = new WebGPULibrary.Mesh({
-        geometry: new WebGPULibrary.CylinderGeometry(0.2),
-        material: new WebGPULibrary.NormalMaterial()
+      let directionLightMesh = new KaneRender.Mesh({
+        geometry: new KaneRender.CylinderGeometry(0.2),
+        material: new KaneRender.NormalMaterial()
       });
       directionLightMesh.scale.set(3, 3, 3);
       directionLightMesh.position.set(0, 0, 30);
       renderer.scene.add(directionLightMesh);
 
 
-      let pointLight = new WebGPULibrary.PointLight({
+      let pointLight = new KaneRender.PointLight({
         radius: 20,
-        position: new WebGPULibrary.Vector3(0, 0, 0),
+        position: new KaneRender.Vector3(0, 0, 0),
         intensity: 1,
-        color: WebGPULibrary.Color.WHITE
+        color: KaneRender.Color.WHITE
       });
       renderer.addLight(pointLight);
-      let pointLightMesh = new WebGPULibrary.Mesh({
-        geometry: new WebGPULibrary.SphereGeometry(),
-        material: new WebGPULibrary.NormalMaterial()
+      let pointLightMesh = new KaneRender.Mesh({
+        geometry: new KaneRender.SphereGeometry(),
+        material: new KaneRender.NormalMaterial()
       });
       pointLightMesh.scale.set(0.3, 0.3, 0.3);
       renderer.scene.add(pointLightMesh);
 
       let materials = [
-        new WebGPULibrary.LambertMaterial({ albedo: WebGPULibrary.Color.RED}),
-        new WebGPULibrary.LambertMaterial({ albedo: WebGPULibrary.Color.GREEN}),
-        new WebGPULibrary.LambertMaterial({ albedo: WebGPULibrary.Color.BLUE}),
-        new WebGPULibrary.LambertMaterial({ albedo: WebGPULibrary.Color.YELLOW}),
-        new WebGPULibrary.LambertMaterial({ albedo: WebGPULibrary.Color.PURPLE}),
-        new WebGPULibrary.LambertMaterial({ albedo: WebGPULibrary.Color.MAGENTA}),
-        new WebGPULibrary.LambertMaterial({ albedo: WebGPULibrary.Color.CYAN}),
-        new WebGPULibrary.LambertMaterial({ albedo: WebGPULibrary.Color.GRAY}),
+        new KaneRender.LambertMaterial({ albedo: KaneRender.Color.RED}),
+        new KaneRender.LambertMaterial({ albedo: KaneRender.Color.GREEN}),
+        new KaneRender.LambertMaterial({ albedo: KaneRender.Color.BLUE}),
+        new KaneRender.LambertMaterial({ albedo: KaneRender.Color.YELLOW}),
+        new KaneRender.LambertMaterial({ albedo: KaneRender.Color.PURPLE}),
+        new KaneRender.LambertMaterial({ albedo: KaneRender.Color.MAGENTA}),
+        new KaneRender.LambertMaterial({ albedo: KaneRender.Color.CYAN}),
+        new KaneRender.LambertMaterial({ albedo: KaneRender.Color.GRAY}),
       ];
 
       let geometries = [
-        new WebGPULibrary.BoxGeometry(),
-        new WebGPULibrary.SphereGeometry(0.5),
-        new WebGPULibrary.CylinderGeometry(0.2),
-        new WebGPULibrary.LatheGeometry(),
-        new WebGPULibrary.CapsuleGeometry(0.5),
+        new KaneRender.BoxGeometry(),
+        new KaneRender.SphereGeometry(0.5),
+        new KaneRender.CylinderGeometry(0.2),
+        new KaneRender.LatheGeometry(),
+        new KaneRender.CapsuleGeometry(0.5),
       ]
 
       let numberOfObject = 500;
       for(let i = 0; i < numberOfObject; i++){
         let geometry = geometries[Math.floor(Math.random() * geometries.length)];
         let material = materials[Math.floor(Math.random() * materials.length)];
-        let mesh = new WebGPULibrary.Mesh({geometry, material});
+        let mesh = new KaneRender.Mesh({geometry, material});
         // random position in a sphere with radius is 30
         mesh.position.set(
           Math.random() * 30 - 15,

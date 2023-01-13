@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Render cube</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            color: #fff;
+            display: flex;
+            text-align: center;
+            flex-direction: column;
+            justify-content: center;
+        }
+        p{
+            font-size: 14px;
+            margin:0
+        }
+        canvas {
+            width: 100%;
+            height: 100%; 
+        }
+    </style>
+</head>
+<body>
+    <canvas></canvas>
+    <script type="module">
+      import KaneRender from '../src/index.js';
+      import * as dat from 'dat.gui';
+
+      const canvas = document.querySelector("canvas");
+
+      const camera = new KaneRender.PerspectiveCamera({
+        position: new KaneRender.Vector3(1, 0, 10),
+        fov: 60
+      });
+
+      const renderer = new KaneRender.Renderer({ canvas, camera,
+        backgroundColor: KaneRender.Color.GRAY
+      });
+      const controls = new KaneRender.OrbitControl(camera, canvas);
+
+      renderer.onUpdate(() => {
+        controls.update();
+      });
+
+      let gui = new dat.GUI();
+
+
+      let ambientLight = new KaneRender.AmbientLight({ intensity: 0.2, color: KaneRender.Color.WHITE });
+      renderer.addLight(ambientLight);
+
+      let directionLight = new KaneRender.DirectionLight({
+        direction: new KaneRender.Vector3(0, 1, 0),
+        intensity: 0.3,
+        color: KaneRender.Color.WHITE
+      });
+      renderer.addLight(directionLight);
+
+      let materials = {
+        normal: new KaneRender.NormalMaterial(),
+        wireframe: new KaneRender.WireFrameMaterial(),
+        lambert: new KaneRender.LambertMaterial({
+          color: KaneRender.Color.RED
+        }),
+        type: "normal"
+      }
+
+      let selectMaterial = materials.normal;
+
+      let f1 = gui.addFolder("Ambient Light");
+      f1.add(ambientLight, "intensity", 0, 1);
+      let f2 = gui.addFolder("Direction Light");
+      f2.add(directionLight, "intensity", 0, 1);
+      f2.add(directionLight.direction, "x", -1, 1);
+      f2.add(directionLight.direction, "y", -1, 1);
+      f2.add(directionLight.direction, "z", -1, 1);
+      gui.addFolder("Material");
+      gui.add(materials, "type", ["normal", "wireframe", "lambert", "default"]).onChange((type) => {
+        switch (type) {
+          case "normal":
+            selectMaterial = materials.normal;
+            break;
+          case "wireframe":
+            selectMaterial = materials.wireframe;
+            break;
+          case "lambert":
+            selectMaterial = materials.lambert;
+            break;
+          case "default":
+            selectMaterial = null;
+            break;
+        }
+        changeObjectMaterial(renderer.scene);
+      });
+
+
+      (async () => {
+        const GLTFLoader = new KaneRender.GLTFLoader();
+        const helmet = await GLTFLoader.loadAsync('/assets/models/helmet.glb');
+        helmet.position.set(-2, 0, 0);
+        const teapot = await GLTFLoader.loadAsync('/assets/models/teapot.glb');
+        teapot.scale.set(0.02, 0.02, 0.02);
+        teapot.position.set(2, -1, 0);
+        renderer.scene.add(teapot);
+        renderer.scene.add(helmet);
+        changeObjectMaterial(renderer.scene);
+        renderer.start();
+      })();
+
+      const changeObjectMaterial = (object) => {
+        if (object.material) {
+          object.material = selectMaterial;
+        }
+        if (object.children) {
+          object.children.forEach(child => {
+            changeObjectMaterial(child);
+          });
+        }
+      }
+
+    </script>
+</body>
+</html>

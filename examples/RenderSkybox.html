@@ -30,23 +30,23 @@
 <body>
     <canvas></canvas>
     <script type="module">
-      import * as WebGPULibrary from "../src/index.js";
+      import KaneRender from "../src/index.js";
       const canvas = document.querySelector("canvas");
 
-      const camera = new WebGPULibrary.PerspectiveCamera({
-        position: new WebGPULibrary.Vector3(1, 0, 0),
+      const camera = new KaneRender.PerspectiveCamera({
+        position: new KaneRender.Vector3(1, 0, 0),
         fov: 60
       });
 
-      const renderer = new WebGPULibrary.Renderer({ canvas, camera });
-      const controls = new WebGPULibrary.OrbitControl(camera, canvas);
+      const renderer = new KaneRender.Renderer({ canvas, camera });
+      const controls = new KaneRender.OrbitControl(camera, canvas);
 
       renderer.onUpdate(() => {
         controls.update();
       });
 
       (async () => {
-        const texture = await new WebGPULibrary.TextureLoader().loadCubemapAsync([
+        const texture = await new KaneRender.TextureLoader().loadCubemapAsync([
           '/assets/cubemap/px.jpg',
           '/assets/cubemap/nx.jpg',
           '/assets/cubemap/py.jpg',
@@ -54,7 +54,7 @@
           '/assets/cubemap/pz.jpg',
           '/assets/cubemap/nz.jpg'
         ]);
-        const skybox = new WebGPULibrary.Skybox(texture);
+        const skybox = new KaneRender.Skybox(texture);
         renderer.scene.add(skybox);
         renderer.start();
       })();

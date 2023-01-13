@@ -30,34 +30,34 @@
 <body>
     <canvas></canvas>
     <script type="module">
-      import * as WebGPULibrary from "../src/index.js";
+      import KaneRender from "../src/index.js";
 
       const canvas = document.querySelector("canvas");
 
-      const camera = new WebGPULibrary.PerspectiveCamera({
-        position: new WebGPULibrary.Vector3(0, 2, 5),
-        lookAt: new WebGPULibrary.Vector3(0, 0, 0),
+      const camera = new KaneRender.PerspectiveCamera({
+        position: new KaneRender.Vector3(0, 2, 5),
+        lookAt: new KaneRender.Vector3(0, 0, 0),
         fov: 60
       });
-      const renderer = new WebGPULibrary.Renderer({ canvas, camera });
+      const renderer = new KaneRender.Renderer({ canvas, camera });
 
-      const cube1 = new WebGPULibrary.Mesh({
-          geometry: new WebGPULibrary.CubeGeometry(),
-          material: new WebGPULibrary.NormalMaterial()
+      const cube1 = new KaneRender.Mesh({
+          geometry: new KaneRender.CubeGeometry(),
+          material: new KaneRender.NormalMaterial()
         });
       cube1.position.set(-1, 0, 0);
       renderer.scene.add(cube1);
 
-      const cube2 = new WebGPULibrary.Mesh({
-          geometry: new WebGPULibrary.CubeGeometry(),
-          material: new WebGPULibrary.NormalMaterial()
+      const cube2 = new KaneRender.Mesh({
+          geometry: new KaneRender.CubeGeometry(),
+          material: new KaneRender.NormalMaterial()
         });
       cube2.position.set(1, 0, 0);
       renderer.scene.add(cube2);
 
-      const sphere = new WebGPULibrary.Mesh({
-          geometry: new WebGPULibrary.SphereGeometry(),
-          material: new WebGPULibrary.NormalMaterial()
+      const sphere = new KaneRender.Mesh({
+          geometry: new KaneRender.SphereGeometry(),
+          material: new KaneRender.NormalMaterial()
         });
 
       sphere.position.set(0, 1, 0);
